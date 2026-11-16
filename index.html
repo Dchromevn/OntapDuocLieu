@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ôn tập Dược liệu</title>
+<style>
+:root{
+  --bg:#f6f6f4; --panel:#ffffff; --line:#dedcd6; --line2:#ecebe7;
+  --text:#22252a; --muted:#6b6f76; --accent:#2f4a5c; --accent-soft:#e8edf0;
+  --ok:#2e6b4a; --ok-bg:#e9f2ec; --bad:#9a3b32; --bad-bg:#f6e9e7; --warn-bg:#f7f2e4;
+  --r:8px;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;background:var(--bg);color:var(--text);font-size:15px;line-height:1.5}
+button,input,select,textarea{font:inherit;color:inherit}
+header{background:var(--panel);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:20}
+.wrap{max-width:1080px;margin:0 auto;padding:0 18px}
+.top{display:flex;align-items:baseline;justify-content:space-between;gap:12px;padding:14px 0 6px}
+.top h1{font-size:19px;margin:0;font-weight:650;letter-spacing:.2px}
+.top .meta{font-size:13px;color:var(--muted)}
+nav{display:flex;gap:2px;overflow-x:auto;scrollbar-width:none}
+nav a{padding:10px 14px;color:var(--muted);text-decoration:none;border-bottom:2px solid transparent;white-space:nowrap;font-weight:500}
+nav a:hover{color:var(--text)}
+nav a.on{color:var(--accent);border-bottom-color:var(--accent)}
+main{padding:22px 0 60px}
+h2{font-size:18px;margin:0 0 4px;font-weight:650}
+.sub{color:var(--muted);margin:0 0 18px;font-size:14px}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:18px}
+.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.sp{flex:1}
+.btn{border:1px solid var(--line);background:var(--panel);padding:8px 14px;border-radius:6px;cursor:pointer;font-weight:500}
+.btn:hover{border-color:#bdbab2}
+.btn.pri{background:var(--accent);border-color:var(--accent);color:#fff}
+.btn.pri:hover{background:#243b4a}
+.btn.danger{color:var(--bad)}
+.btn.sm{padding:5px 10px;font-size:13px}
+.btn:disabled{opacity:.45;cursor:default}
+input[type=text],input[type=password],input[type=number],input[type=search],select,textarea{border:1px solid var(--line);background:#fff;border-radius:6px;padding:8px 10px;width:100%}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+textarea{resize:vertical;min-height:64px}
+label.f{display:block;font-size:13px;color:var(--muted);margin:0 0 4px;font-weight:500}
+.hint{font-size:13px;color:var(--muted)}
+.empty{padding:40px;text-align:center;color:var(--muted)}
+/* library */
+.toolbar{display:grid;grid-template-columns:1fr 200px 200px;gap:10px;margin-bottom:16px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:14px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);overflow:hidden;cursor:pointer;display:flex;flex-direction:column}
+.card:hover{border-color:#b9b6ad}
+.card .ph{aspect-ratio:4/3;background:#ebeae6 center/cover no-repeat}
+.card .bd{padding:10px 12px}
+.card .nm{font-weight:600}
+.card .sc{font-style:italic;color:var(--muted);font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tag{display:inline-block;font-size:12px;padding:1px 8px;border-radius:20px;background:var(--accent-soft);color:var(--accent);margin-top:6px}
+/* detail table */
+.kv{width:100%;border-collapse:collapse}
+.kv th,.kv td{text-align:left;padding:9px 10px;border-bottom:1px solid var(--line2);vertical-align:top}
+.kv th{width:170px;color:var(--muted);font-weight:500;font-size:14px}
+.kv tr:last-child th,.kv tr:last-child td{border-bottom:0}
+.sci{font-style:italic}
+.pre{white-space:pre-line}
+.gal{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:8px}
+.gal img{width:100%;aspect-ratio:3/4;object-fit:cover;border-radius:6px;border:1px solid var(--line);cursor:zoom-in;background:#ebeae6}
+/* modal */
+.modal{position:fixed;inset:0;background:rgba(20,22,25,.5);display:none;align-items:flex-start;justify-content:center;padding:40px 14px;z-index:50;overflow:auto}
+.modal.on{display:flex}
+.modal .box{background:var(--panel);border-radius:10px;max-width:820px;width:100%;padding:22px;position:relative}
+.modal .x{position:absolute;right:14px;top:12px}
+.zoom{position:fixed;inset:0;background:rgba(10,10,10,.88);display:none;align-items:center;justify-content:center;z-index:60;cursor:zoom-out}
+.zoom.on{display:flex}
+.zoom img{max-width:94vw;max-height:92vh;border-radius:4px}
+/* flashcard */
+.fc-wrap{max-width:720px;margin:0 auto}
+.fc{background:var(--panel);border:1px solid var(--line);border-radius:10px;min-height:420px;padding:20px;cursor:pointer;display:flex;flex-direction:column}
+.fc .lbl{font-size:12px;text-transform:uppercase;letter-spacing:.8px;color:var(--muted);margin-bottom:10px}
+.fc .imgs{display:flex;gap:10px;justify-content:center;flex:1;align-items:center}
+.fc .imgs img{max-height:340px;max-width:48%;object-fit:contain;border-radius:6px;border:1px solid var(--line2)}
+.fc .big{font-size:24px;font-weight:650;text-align:center;margin:8px 0 2px}
+.fc .sci{text-align:center;color:var(--muted);margin-bottom:12px}
+.fc-ctl{display:flex;justify-content:space-between;align-items:center;margin-top:14px;gap:10px;flex-wrap:wrap}
+.progress{height:4px;background:var(--line2);border-radius:4px;overflow:hidden;margin-top:12px}
+.progress i{display:block;height:100%;background:var(--accent)}
+/* pick list */
+.pick{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:6px;max-height:340px;overflow:auto;border:1px solid var(--line2);border-radius:6px;padding:10px;background:#fbfbfa}
+.pick label{display:flex;gap:8px;align-items:center;padding:4px 6px;border-radius:4px;cursor:pointer;font-size:14px}
+.pick label:hover{background:var(--line2)}
+/* quiz */
+.q-layout{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.15fr);gap:20px}
+.q-img{display:flex;flex-direction:column;gap:8px}
+.q-img img{width:100%;max-height:420px;object-fit:contain;border-radius:6px;border:1px solid var(--line2);background:#fbfbfa;cursor:zoom-in}
+.q-img .thumbs{display:flex;gap:6px}
+.q-img .thumbs img{width:64px;height:64px;object-fit:cover;cursor:pointer}
+.field{margin-bottom:12px}
+.res{border:1px solid var(--line2);border-radius:6px;padding:8px 10px;margin-top:6px;font-size:14px}
+.res.ok{background:var(--ok-bg);border-color:#cfe2d6}
+.res.bad{background:var(--bad-bg);border-color:#ecd3cf}
+.res .h{display:flex;justify-content:space-between;gap:8px;font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.5px}
+.res.ok .h{color:var(--ok)} .res.bad .h{color:var(--bad)}
+.res .h button{background:none;border:0;padding:0;font-size:12px;color:var(--muted);text-decoration:underline;cursor:pointer;text-transform:none;letter-spacing:0;font-weight:400}
+.score{font-size:32px;font-weight:700;color:var(--accent)}
+.opts{display:grid;gap:8px;margin-top:14px}
+.opt{text-align:left;border:1px solid var(--line);background:#fff;border-radius:6px;padding:11px 14px;cursor:pointer}
+.opt:hover{border-color:#b9b6ad}
+.opt.ok{background:var(--ok-bg);border-color:var(--ok);color:var(--ok);font-weight:600}
+.opt.bad{background:var(--bad-bg);border-color:var(--bad);color:var(--bad)}
+.opt:disabled{cursor:default}
+.qtext{font-size:17px;font-weight:600;margin:4px 0}
+.qbox{white-space:pre-line;background:#fbfbfa;border:1px solid var(--line2);border-radius:6px;padding:12px;margin-top:8px}
+table.list{width:100%;border-collapse:collapse;font-size:14px}
+table.list th,table.list td{padding:8px 10px;border-bottom:1px solid var(--line2);text-align:left;vertical-align:middle}
+table.list th{color:var(--muted);font-weight:500;font-size:13px;background:#fbfbfa}
+table.list img{width:44px;height:44px;object-fit:cover;border-radius:4px;border:1px solid var(--line2);display:block}
+.pill{font-size:12px;padding:1px 8px;border-radius:20px;white-space:nowrap}
+.pill.ok{background:var(--ok-bg);color:var(--ok)} .pill.bad{background:var(--bad-bg);color:var(--bad)} .pill.new{background:var(--warn-bg);color:#7a5c12}
+.notice{background:var(--warn-bg);border:1px solid #e9dfc3;border-radius:6px;padding:10px 14px;font-size:14px;margin-bottom:14px}
+.notice.ok{background:var(--ok-bg);border-color:#cfe2d6}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.form-grid .full{grid-column:1/-1}
+.edit-imgs{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+.edit-imgs .it{position:relative}
+.edit-imgs img{width:96px;height:96px;object-fit:cover;border-radius:6px;border:1px solid var(--line)}
+.edit-imgs button{position:absolute;top:3px;right:3px;font-size:11px;padding:1px 6px;border-radius:4px;border:1px solid var(--line);background:#fff;cursor:pointer}
+.sec{margin-top:22px}
+.sec h3{font-size:15px;margin:0 0 10px;font-weight:650}
+footer{border-top:1px solid var(--line);padding:16px 0;color:var(--muted);font-size:13px}
+footer a{color:var(--muted)}
+@media (max-width:760px){
+  .toolbar{grid-template-columns:1fr}
+  .q-layout{grid-template-columns:1fr}
+  .form-grid{grid-template-columns:1fr}
+  .kv th{width:120px}
+  .grid{grid-template-columns:repeat(2,1fr);gap:10px}
+  .fc .imgs img{max-height:240px}
+  table.list .hide-m{display:none}
+}
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <div class="top"><h1>Ôn tập Dược liệu</h1><span class="meta" id="meta"></span></div>
+    <nav id="nav">
+      <a href="#thu-vien" data-v="thu-vien">Thư viện</a>
+      <a href="#flashcard" data-v="flashcard">Flashcard</a>
+      <a href="#tu-luan" data-v="tu-luan">Kiểm tra tự luận</a>
+      <a href="#trac-nghiem" data-v="trac-nghiem">Trắc nghiệm</a>
+      <a href="#quan-ly" data-v="quan-ly">Quản lý dữ liệu</a>
+    </nav>
+  </div>
+</header>
+<main><div class="wrap" id="view"><div class="empty">Đang tải dữ liệu...</div></div></main>
+<footer><div class="wrap">Dữ liệu: Danh mục dược liệu nhận thức — Thực tập Dược liệu.</div></footer>
+
+<div class="modal" id="modal"><div class="box"><button class="btn sm x" onclick="closeModal()">Đóng</button><div id="modalBody"></div></div></div>
+<div class="zoom" id="zoom" onclick="this.classList.remove('on')"><img id="zoomImg" alt=""></div>
+
+<script src="data/plants.js"></script>
+<script>
+/* ================= Trạng thái & tiện ích ================= */
+const FIELDS=[
+  ['ten','Tên dược liệu'],['khoaHoc','Tên khoa học'],['ho','Họ'],
+  ['boPhan','Bộ phận dùng'],['thanhPhan','Thành phần hóa học chính'],['congDung','Công dụng']
+];
+const LS={get(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}},
+          set(k,v){try{localStorage.setItem(k,JSON.stringify(v));return true}catch(e){return false}},
+          del(k){try{localStorage.removeItem(k)}catch(e){}}};
+let published=[];     // dữ liệu trên web
+let PL=[];            // dữ liệu đang dùng (có thể gồm bản nháp của người quản lý)
+let draft=LS.get('dl_draft',null);
+const $=s=>document.querySelector(s);
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const norm=s=>String(s||'').normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/đ/g,'d').replace(/Đ/g,'d').toLowerCase().replace(/[^a-z0-9]+/g,' ').trim();
+const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.random()*(i+1)|0;[a[i],a[j]]=[a[j],a[i]]}return a};
+const byId=id=>PL.find(p=>p.id===id);
+const hoVN=h=>{const m=String(h||'').match(/\(([^)]+)\)/);return m?m[1].trim():''};
+const qImgs=p=>{const a=p.anh||[];return p.nhan&&a.length>1?a.slice(1):a};
+const hoLatin=h=>String(h||'').replace(/\(.*?\)/g,'').trim();
+function zoom(src){$('#zoomImg').src=src;$('#zoom').classList.add('on')}
+function openModal(html){$('#modalBody').innerHTML=html;$('#modal').classList.add('on')}
+function closeModal(){$('#modal').classList.remove('on')}
+$('#modal').addEventListener('click',e=>{if(e.target.id==='modal')closeModal()});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeModal();$('#zoom').classList.remove('on')}});
+
+/* ================= Tải dữ liệu ================= */
+async function load(){
+  try{
+    const r=await fetch('data/plants.json?t='+Date.now(),{cache:'no-store'});
+    if(!r.ok) throw new Error(r.status);
+    const j=await r.json(); published=j.cay||[];
+  }catch(e){
+    // Mở trực tiếp trên máy (file://): dùng bản dữ liệu nhúng sẵn
+    published=(window.__PLANTS&&window.__PLANTS.cay)||[];
+    if(!published.length){$('#view').innerHTML='<div class="panel empty">Không tải được dữ liệu. Hãy giải nén toàn bộ thư mục (gồm cả thư mục data và images) rồi mở lại index.html.</div>';return}
+  }
+  PL=draft?draft:published;
+  route();
+}
+function setMeta(){$('#meta').textContent=PL.length+' dược liệu'+(draft?' — có thay đổi chưa đăng':'')}
+
+/* ================= Điều hướng ================= */
+const views={'thu-vien':vLibrary,'flashcard':vFlash,'tu-luan':vWritten,'trac-nghiem':vMCQ,'quan-ly':vAdmin};
+function route(){
+  const v=(location.hash||'#thu-vien').slice(1).split('/')[0];
+  const f=views[v]||vLibrary;
+  document.querySelectorAll('#nav a').forEach(a=>a.classList.toggle('on',a.dataset.v===(views[v]?v:'thu-vien')));
+  setMeta(); f(); window.scrollTo(0,0);
+}
+window.addEventListener('hashchange',route);
+
+/* ================= Thư viện ================= */
+let libQ='',libHo='',libBp='';
+function vLibrary(){
+  const hos=[...new Set(PL.map(p=>p.ho).filter(Boolean))].sort((a,b)=>hoVN(a).localeCompare(hoVN(b),'vi'));
+  const bps=[...new Set(PL.map(p=>p.boPhan).filter(Boolean))].sort((a,b)=>a.localeCompare(b,'vi'));
+  $('#view').innerHTML=`
+    <h2>Thư viện dược liệu</h2><p class="sub">Bấm vào từng dược liệu để xem đầy đủ thông tin và hình ảnh.</p>
+    <div class="toolbar">
+      <input type="search" id="q" placeholder="Tìm theo tên, tên khoa học, thành phần, công dụng..." value="${esc(libQ)}">
+      <select id="fho"><option value="">Tất cả các họ</option>${hos.map(h=>`<option ${h===libHo?'selected':''}>${esc(h)}</option>`).join('')}</select>
+      <select id="fbp"><option value="">Tất cả bộ phận dùng</option>${bps.map(h=>`<option ${h===libBp?'selected':''}>${esc(h)}</option>`).join('')}</select>
+    </div>
+    <div class="grid" id="grid"></div>`;
+  const draw=()=>{
+    const q=norm(libQ);
+    const list=PL.filter(p=>(!libHo||p.ho===libHo)&&(!libBp||p.boPhan===libBp)&&(!q||norm([p.ten,p.khoaHoc,p.ho,p.thanhPhan,p.congDung,p.dacDiem].join(' ')).includes(q)));
+    $('#grid').innerHTML=list.length?list.map(p=>`
+      <div class="card" onclick="showPlant('${p.id}')">
+        <div class="ph" style="background-image:url('${p.anh&&p.anh[0]?p.anh[0]:''}')"></div>
+        <div class="bd"><div class="nm">${esc(p.ten)}</div><div class="sc">${esc(p.khoaHoc)}</div><span class="tag">${esc(hoVN(p.ho)||p.ho)}</span></div>
+      </div>`).join(''):'<div class="empty" style="grid-column:1/-1">Không có dược liệu phù hợp.</div>';
+  };
+  $('#q').oninput=e=>{libQ=e.target.value;draw()};
+  $('#fho').onchange=e=>{libHo=e.target.value;draw()};
+  $('#fbp').onchange=e=>{libBp=e.target.value;draw()};
+  draw();
+}
+function plantTable(p){
+  return `<table class="kv">
+    <tr><th>Tên khoa học</th><td class="sci">${esc(p.khoaHoc)}</td></tr>
+    <tr><th>Họ</th><td>${esc(p.ho)}</td></tr>
+    <tr><th>Bộ phận dùng</th><td>${esc(p.boPhan)}</td></tr>
+    <tr><th>Thành phần hóa học chính</th><td>${esc(p.thanhPhan)}</td></tr>
+    <tr><th>Công dụng</th><td>${esc(p.congDung)}</td></tr>
+    ${p.dacDiem?`<tr><th>Đặc điểm nhận dạng</th><td class="pre">${esc(p.dacDiem)}</td></tr>`:''}
+  </table>`;
+}
+function showPlant(id){
+  const p=byId(id); if(!p)return;
+  openModal(`<h2>${esc(p.ten)}</h2><p class="sub sci">${esc(p.khoaHoc)}</p>
+    <div class="gal">${(p.anh||[]).map(a=>`<img src="${a}" onclick="zoom(this.src)" alt="">`).join('')}</div>
+    <div class="sec">${plantTable(p)}</div>`);
+}
+
+/* ================= Flashcard ================= */
+let fc={deck:[],i:0,flip:false,mode:'img'};
+function vFlash(){
+  if(!fc.deck.length||fc.deck.some(id=>!byId(id))) fc.deck=PL.map(p=>p.id),fc.i=0;
+  $('#view').innerHTML=`
+    <h2>Flashcard</h2><p class="sub">Bấm vào thẻ (hoặc phím cách) để lật. Dùng phím mũi tên trái/phải để chuyển thẻ.</p>
+    <div class="fc-wrap">
+      <div class="row" style="margin-bottom:12px">
+        <label class="hint">Mặt trước:</label>
+        <select id="fcMode" style="width:auto">
+          <option value="img" ${fc.mode==='img'?'selected':''}>Hình ảnh</option>
+          <option value="ten" ${fc.mode==='ten'?'selected':''}>Tên dược liệu</option>
+          <option value="dd" ${fc.mode==='dd'?'selected':''}>Đặc điểm nhận dạng</option>
+        </select>
+        <span class="sp"></span>
+        <button class="btn sm" onclick="fcShuffle()">Xáo trộn</button>
+        <button class="btn sm" onclick="fcReset()">Theo thứ tự</button>
+      </div>
+      <div class="fc" id="fcCard" onclick="fcFlip()"></div>
+      <div class="progress"><i id="fcBar"></i></div>
+      <div class="fc-ctl">
+        <button class="btn" onclick="fcGo(-1)">Thẻ trước</button>
+        <span class="hint" id="fcPos"></span>
+        <button class="btn pri" onclick="fcGo(1)">Thẻ sau</button>
+      </div>
+    </div>`;
+  $('#fcMode').onchange=e=>{fc.mode=e.target.value;fc.flip=false;fcDraw()};
+  fcDraw();
+}
+function fcDraw(){
+  const p=byId(fc.deck[fc.i]); if(!p){$('#fcCard').innerHTML='<div class="empty">Chưa có dữ liệu.</div>';return}
+  let h;
+  if(!fc.flip){
+    if(fc.mode==='img') h=`<div class="lbl">Mặt trước — dược liệu này là gì?</div><div class="imgs">${qImgs(p).slice(0,2).map(a=>`<img src="${a}" alt="">`).join('')||'<span class="hint">Chưa có ảnh</span>'}</div>`;
+    else if(fc.mode==='ten') h=`<div class="lbl">Mặt trước</div><div class="imgs" style="flex-direction:column"><div class="big">${esc(p.ten)}</div><div class="hint">Nhớ lại: tên khoa học, họ, bộ phận dùng, thành phần, công dụng</div></div>`;
+    else h=`<div class="lbl">Mặt trước — đặc điểm nhận dạng</div><div class="qbox" style="flex:1;font-size:16px">${esc(p.dacDiem||'(Chưa có đặc điểm cho dược liệu này)')}</div>`;
+  }else{
+    h=`<div class="lbl">Mặt sau</div><div class="big">${esc(p.ten)}</div><div class="sci">${esc(p.khoaHoc)}</div>${plantTable(p)}`;
+  }
+  $('#fcCard').innerHTML=h;
+  $('#fcPos').textContent=(fc.i+1)+' / '+fc.deck.length;
+  $('#fcBar').style.width=((fc.i+1)/fc.deck.length*100)+'%';
+}
+function fcFlip(){fc.flip=!fc.flip;fcDraw()}
+function fcGo(d){fc.i=(fc.i+d+fc.deck.length)%fc.deck.length;fc.flip=false;fcDraw()}
+function fcShuffle(){fc.deck=shuffle(PL.map(p=>p.id));fc.i=0;fc.flip=false;fcDraw()}
+function fcReset(){fc.deck=PL.map(p=>p.id);fc.i=0;fc.flip=false;fcDraw()}
+document.addEventListener('keydown',e=>{
+  if(!location.hash.startsWith('#flashcard')||/INPUT|TEXTAREA|SELECT/.test(document.activeElement.tagName))return;
+  if(e.key==='ArrowRight')fcGo(1); else if(e.key==='ArrowLeft')fcGo(-1); else if(e.key===' '){e.preventDefault();fcFlip()}
+});
+
+/* ================= Chọn dược liệu cho bài kiểm tra ================= */
+function pickerHTML(prefix){
+  return `<div class="row" style="margin-bottom:8px">
+      <button class="btn sm" onclick="pickSet('${prefix}','all')">Chọn tất cả</button>
+      <button class="btn sm" onclick="pickSet('${prefix}','none')">Bỏ chọn</button>
+      <button class="btn sm" onclick="pickSet('${prefix}','rand')">Chọn ngẫu nhiên 10</button>
+      <span class="sp"></span><span class="hint" id="${prefix}Count"></span></div>
+    <div class="pick" id="${prefix}Pick">${PL.map((p,i)=>`<label><input type="checkbox" value="${p.id}"> ${i+1}. ${esc(p.ten)}</label>`).join('')}</div>`;
+}
+function pickSet(prefix,how){
+  const cbs=[...document.querySelectorAll('#'+prefix+'Pick input')];
+  if(how==='rand'){const s=new Set(shuffle(cbs).slice(0,10));cbs.forEach(c=>c.checked=s.has(c))}
+  else cbs.forEach(c=>c.checked=how==='all');
+  pickCount(prefix);
+}
+function pickCount(prefix){const n=pickVals(prefix).length;const el=$('#'+prefix+'Count');if(el)el.textContent='Đã chọn '+n+' dược liệu';return n}
+function pickVals(prefix){return [...document.querySelectorAll('#'+prefix+'Pick input:checked')].map(c=>c.value)}
+function bindPick(prefix){$('#'+prefix+'Pick').addEventListener('change',()=>pickCount(prefix));pickCount(prefix)}
+
+/* ================= Kiểm tra tự luận ================= */
+let wt=null;
+function vWritten(){
+  if(wt&&wt.active) return wtDraw();
+  $('#view').innerHTML=`
+    <h2>Kiểm tra tự luận</h2><p class="sub">Đề hiện hình ảnh dược liệu, bạn gõ đầy đủ các mục rồi bấm Kiểm tra để xem đáp án. Chọn tối thiểu 10 dược liệu.</p>
+    <div class="panel">${pickerHTML('wt')}
+      <div class="row" style="margin-top:14px"><span class="hint" id="wtErr"></span><span class="sp"></span><button class="btn pri" onclick="wtStart()">Bắt đầu làm bài</button></div>
+    </div>`;
+  bindPick('wt');
+}
+function wtStart(){
+  const ids=pickVals('wt');
+  if(ids.length<10){$('#wtErr').textContent='Cần chọn ít nhất 10 dược liệu (hiện có '+ids.length+').';return}
+  wt={active:true,ids:shuffle(ids),i:0,ans:{},grade:{},checked:{}};
+  wtDraw();
+}
+function aliases(s){ // tách các cách viết: "A (B)", "A hoặc B", "A, B"
+  const out=new Set([s]); const m=String(s).match(/^(.*?)\((.*?)\)\s*$/);
+  if(m){out.add(m[1]);out.add(m[2])}
+  String(s).split(/\s+hoặc\s+|,|;/).forEach(x=>x.trim()&&out.add(x));
+  return [...out].map(norm).filter(Boolean);
+}
+function sciKey(s){return norm(s).split(' ').slice(0,2).join(' ')}
+function autoGrade(key,input,correct){
+  const a=norm(input); if(!a)return false;
+  if(key==='ten') return aliases(correct).includes(a);
+  if(key==='khoaHoc'){const ks=String(correct).split(/\s+hoặc\s+|,/).map(sciKey);return ks.includes(sciKey(input))}
+  if(key==='ho'){const opts=[norm(hoLatin(correct)),norm(hoVN(correct)),norm(correct)].filter(Boolean);return opts.includes(a)||opts.some(o=>a.includes(o))}
+  if(key==='boPhan'){const c=norm(correct);return a===c||c.includes(a)&&a.length>=2||a.includes(c)}
+  if(key==='thanhPhan'){const items=String(correct).replace(/\(.*?\)/g,'').split(/,|;/).map(norm).filter(Boolean);return items.every(x=>a.includes(x))}
+  if(key==='congDung'){ // tính đúng nếu khớp được từ một nửa số ý trở lên
+    const items=String(correct).replace(/^(chữa|thuốc)\s+/i,'').split(/,|;|\./).map(norm).filter(x=>x.length>2);
+    if(!items.length)return false; const hit=items.filter(x=>a.includes(x)).length; return hit>=Math.ceil(items.length/2);
+  }
+  return a===norm(correct);
+}
+function wtDraw(){
+  const id=wt.ids[wt.i],p=byId(id),done=wt.checked[id],ans=wt.ans[id]||{};
+  const imgs=qImgs(p);
+  $('#view').innerHTML=`
+    <div class="row" style="margin-bottom:12px"><h2 style="margin:0">Kiểm tra tự luận</h2><span class="sp"></span>
+      <span class="hint">Câu ${wt.i+1} / ${wt.ids.length}</span><button class="btn sm" onclick="wtQuit()">Kết thúc bài</button></div>
+    <div class="progress" style="margin:0 0 16px"><i style="width:${(wt.i+1)/wt.ids.length*100}%"></i></div>
+    <div class="panel q-layout">
+      <div class="q-img">
+        ${imgs.length?`<img id="wtMain" src="${imgs[0]}" onclick="zoom(this.src)" alt="">
+        <div class="thumbs">${imgs.map(a=>`<img src="${a}" onclick="$('#wtMain').src=this.src" alt="">`).join('')}</div>`:'<div class="empty">Chưa có ảnh</div>'}
+        ${done?`<div class="sec">${p.dacDiem?`<label class="f">Đặc điểm nhận dạng</label><div class="qbox" style="margin-top:0">${esc(p.dacDiem)}</div>`:''}</div>`:''}
+      </div>
+      <div>
+        ${FIELDS.map(([k,l])=>{
+          const g=wt.grade[id]&&wt.grade[id][k];
+          return `<div class="field"><label class="f">${l}</label>
+            ${k==='congDung'?`<textarea data-k="${k}" ${done?'disabled':''}>${esc(ans[k]||'')}</textarea>`:`<input type="text" data-k="${k}" value="${esc(ans[k]||'')}" ${done?'disabled':''} autocomplete="off">`}
+            ${done?`<div class="res ${g?'ok':'bad'}"><div class="h"><span>${g?'Đúng':'Chưa đúng'}</span><button onclick="wtToggle('${k}')">Đổi chấm điểm</button></div><div class="${k==='khoaHoc'?'sci':''}">${esc(p[k])}</div></div>`:''}
+          </div>`}).join('')}
+        <div class="row">
+          <button class="btn" onclick="wtGo(-1)" ${wt.i===0?'disabled':''}>Câu trước</button><span class="sp"></span>
+          ${done?(wt.i<wt.ids.length-1?`<button class="btn pri" onclick="wtGo(1)">Câu tiếp theo</button>`:`<button class="btn pri" onclick="wtResult()">Xem kết quả</button>`)
+                :`<button class="btn pri" onclick="wtCheck()">Kiểm tra</button>`}
+        </div>
+        ${done?'<p class="hint" style="margin-top:10px">Máy chấm tự động theo từ khóa. Nếu bạn thấy câu trả lời của mình đúng ý, bấm "Đổi chấm điểm".</p>':''}
+      </div>
+    </div>`;
+  if(!done){const f=document.querySelector('[data-k]');f&&f.focus();
+    document.querySelectorAll('input[data-k]').forEach(el=>el.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();const all=[...document.querySelectorAll('[data-k]')];const n=all[all.indexOf(el)+1];n?n.focus():wtCheck()}}));}
+}
+function wtCheck(){
+  const id=wt.ids[wt.i],p=byId(id),a={};
+  document.querySelectorAll('[data-k]').forEach(el=>a[el.dataset.k]=el.value);
+  wt.ans[id]=a; wt.grade[id]={}; FIELDS.forEach(([k])=>wt.grade[id][k]=autoGrade(k,a[k],p[k]));
+  wt.checked[id]=true; wtDraw();
+}
+function wtToggle(k){const id=wt.ids[wt.i];wt.grade[id][k]=!wt.grade[id][k];wtDraw()}
+function wtGo(d){wt.i=Math.max(0,Math.min(wt.ids.length-1,wt.i+d));wtDraw()}
+function wtQuit(){if(Object.keys(wt.checked).length)wtResult();else{wt=null;vWritten()}}
+function wtResult(){
+  const ids=wt.ids.filter(id=>wt.checked[id]);
+  let tot=0;const rows=ids.map(id=>{const p=byId(id),g=wt.grade[id];const n=FIELDS.filter(([k])=>g[k]).length;tot+=n;
+    return `<tr><td>${esc(p.ten)}</td><td>${n}/6</td><td class="hide-m">${FIELDS.filter(([k])=>!g[k]).map(([,l])=>l).join(', ')||'—'}</td></tr>`}).join('');
+  const max=ids.length*6;
+  $('#view').innerHTML=`<h2>Kết quả kiểm tra tự luận</h2><p class="sub">Đã làm ${ids.length} / ${wt.ids.length} dược liệu.</p>
+    <div class="panel"><div class="score">${tot} / ${max} mục đúng</div><p class="hint">Tương đương ${max?Math.round(tot/max*100):0}%.</p>
+    <table class="list" style="margin-top:12px"><tr><th>Dược liệu</th><th>Điểm</th><th class="hide-m">Mục cần ôn lại</th></tr>${rows}</table>
+    <div class="row" style="margin-top:16px"><span class="sp"></span><button class="btn" onclick="wtRetryWrong()">Làm lại các cây chưa đạt</button><button class="btn pri" onclick="wt=null;vWritten()">Làm bài mới</button></div></div>`;
+  wt.active=false;
+}
+function wtRetryWrong(){
+  const ids=wt.ids.filter(id=>wt.checked[id]&&FIELDS.some(([k])=>!wt.grade[id][k]));
+  if(!ids.length){alertBox('Bạn đã đúng hết, không có cây nào cần làm lại.');return}
+  wt={active:true,ids:shuffle(ids),i:0,ans:{},grade:{},checked:{}};wtDraw();
+}
+function alertBox(msg){openModal(`<p style="margin:10px 0 0">${esc(msg)}</p>`)}
+
+/* ================= Trắc nghiệm ================= */
+const QTYPES=[
+  {k:'img',l:'Nhìn ảnh, chọn tên dược liệu'},
+  {k:'khoaHoc',l:'Tên khoa học'},
+  {k:'ho',l:'Họ'},
+  {k:'boPhan',l:'Bộ phận dùng'},
+  {k:'thanhPhan',l:'Thành phần hóa học chính'},
+  {k:'congDung',l:'Đọc công dụng, chọn tên dược liệu'},
+  {k:'dacDiem',l:'Đọc đặc điểm, chọn tên dược liệu'}
+];
+let mq=null;
+function vMCQ(){
+  if(mq&&mq.active) return mqDraw();
+  $('#view').innerHTML=`
+    <h2>Trắc nghiệm</h2><p class="sub">Mỗi câu có 4 lựa chọn, chọn xong hiện đáp án ngay.</p>
+    <div class="panel">
+      <h3 style="margin:0 0 8px;font-size:15px">Dược liệu dùng để ra đề</h3>${pickerHTML('mq')}
+      <div class="sec"><h3>Dạng câu hỏi</h3><div class="pick" style="max-height:none" id="mqTypes">${QTYPES.map(t=>`<label><input type="checkbox" value="${t.k}" checked> ${t.l}</label>`).join('')}</div></div>
+      <div class="row" style="margin-top:14px"><label class="hint">Số câu hỏi</label><input type="number" id="mqN" value="20" min="5" max="200" style="width:90px">
+        <span class="hint" id="mqErr"></span><span class="sp"></span><button class="btn pri" onclick="mqStart()">Bắt đầu</button></div>
+    </div>`;
+  bindPick('mq'); pickSet('mq','all');
+}
+function buildQ(p,type,pool){
+  const others=pool.filter(o=>o.id!==p.id);
+  const uniq=(arr,correct)=>{const seen=new Set([norm(correct)]);const out=[];for(const v of shuffle(arr)){const n=norm(v);if(v&&!seen.has(n)){seen.add(n);out.push(v)}if(out.length===3)break}return out};
+  let q,correct,distract;
+  if(type==='img'){if(!qImgs(p).length)return null;q='Đây là dược liệu nào?';correct=p.ten;distract=uniq(others.map(o=>o.ten),correct)}
+  else if(type==='congDung'){q='Dược liệu nào có công dụng sau?';correct=p.ten;distract=uniq(others.filter(o=>norm(o.congDung)!==norm(p.congDung)).map(o=>o.ten),correct)}
+  else if(type==='dacDiem'){if(!p.dacDiem)return null;q='Dược liệu nào có đặc điểm nhận dạng sau?';correct=p.ten;distract=uniq(others.map(o=>o.ten),correct)}
+  else{const lab=QTYPES.find(t=>t.k===type).l.toLowerCase();q=`${lab.charAt(0).toUpperCase()+lab.slice(1)} của ${p.ten} là gì?`;correct=p[type];
+    // dùng cả dữ liệu toàn bộ để có đủ phương án nhiễu
+    distract=uniq(PL.filter(o=>o.id!==p.id).map(o=>o[type]),correct)}
+  if(!correct||distract.length<3)return null;
+  return {id:p.id,type,q,correct,opts:shuffle([correct,...distract]),pick:null};
+}
+function mqStart(){
+  const ids=pickVals('mq'),types=[...document.querySelectorAll('#mqTypes input:checked')].map(c=>c.value);
+  const n=Math.max(1,parseInt($('#mqN').value)||20);
+  if(ids.length<4){$('#mqErr').textContent='Cần chọn ít nhất 4 dược liệu.';return}
+  if(!types.length){$('#mqErr').textContent='Chọn ít nhất một dạng câu hỏi.';return}
+  const pool=ids.map(byId),qs=[];let guard=0;
+  while(qs.length<n&&guard++<n*30){
+    const p=pool[Math.random()*pool.length|0],t=types[Math.random()*types.length|0];
+    if(qs.some(x=>x.id===p.id&&x.type===t)&&guard<n*20)continue;
+    const q=buildQ(p,t,pool.length>=4?pool:PL); if(q)qs.push(q);
+  }
+  if(!qs.length){$('#mqErr').textContent='Không tạo được câu hỏi với lựa chọn hiện tại.';return}
+  mq={active:true,qs,i:0};mqDraw();
+}
+function mqDraw(){
+  const Q=mq.qs[mq.i],p=byId(Q.id),ans=Q.pick!==null;
+  let stem='';
+  if(Q.type==='img')stem=`<div class="q-img" style="max-width:520px">${qImgs(p).length>1?`<div class="row" style="flex-wrap:nowrap">${qImgs(p).slice(0,2).map(a=>`<img src="${a}" style="width:50%;max-height:320px" onclick="zoom(this.src)" alt="">`).join('')}</div>`:`<img src="${qImgs(p)[0]}" onclick="zoom(this.src)" alt="">`}</div>`;
+  else if(Q.type==='congDung')stem=`<div class="qbox">${esc(p.congDung)}</div>`;
+  else if(Q.type==='dacDiem')stem=`<div class="qbox">${esc(p.dacDiem)}</div>`;
+  const right=mq.qs.filter(q=>q.pick!==null&&q.pick===q.correct).length,doneN=mq.qs.filter(q=>q.pick!==null).length;
+  $('#view').innerHTML=`
+    <div class="row" style="margin-bottom:12px"><h2 style="margin:0">Trắc nghiệm</h2><span class="sp"></span>
+      <span class="hint">Câu ${mq.i+1} / ${mq.qs.length} — đúng ${right}/${doneN}</span><button class="btn sm" onclick="mqResult()">Kết thúc bài</button></div>
+    <div class="progress" style="margin:0 0 16px"><i style="width:${(mq.i+1)/mq.qs.length*100}%"></i></div>
+    <div class="panel">
+      <div class="qtext">${esc(Q.q)}</div>${stem}
+      <div class="opts">${Q.opts.map((o,j)=>{let c='';if(ans){if(o===Q.correct)c='ok';else if(o===Q.pick)c='bad'}
+        return `<button class="opt ${c} ${Q.type==='khoaHoc'?'sci':''}" ${ans?'disabled':''} onclick="mqPick(${j})">${String.fromCharCode(65+j)}. ${esc(o)}</button>`}).join('')}</div>
+      ${ans?`<div class="sec"><p style="margin:0 0 8px"><b>${Q.pick===Q.correct?'Chính xác.':'Chưa đúng.'}</b> Thông tin về <b>${esc(p.ten)}</b>:</p>${plantTable(p)}</div>`:''}
+      <div class="row" style="margin-top:16px"><button class="btn" onclick="mqGo(-1)" ${mq.i===0?'disabled':''}>Câu trước</button><span class="sp"></span>
+        ${mq.i<mq.qs.length-1?`<button class="btn pri" onclick="mqGo(1)" ${ans?'':'disabled'}>Câu tiếp theo</button>`:`<button class="btn pri" onclick="mqResult()" ${ans?'':'disabled'}>Xem kết quả</button>`}</div>
+    </div>`;
+}
+function mqPick(j){const Q=mq.qs[mq.i];Q.pick=Q.opts[j];mqDraw()}
+function mqGo(d){mq.i=Math.max(0,Math.min(mq.qs.length-1,mq.i+d));mqDraw()}
+function mqResult(){
+  const done=mq.qs.filter(q=>q.pick!==null),right=done.filter(q=>q.pick===q.correct);
+  const wrong=done.filter(q=>q.pick!==q.correct);
+  $('#view').innerHTML=`<h2>Kết quả trắc nghiệm</h2><p class="sub">Đã trả lời ${done.length} / ${mq.qs.length} câu.</p>
+    <div class="panel"><div class="score">${right.length} / ${done.length} câu đúng</div><p class="hint">Tương đương ${done.length?Math.round(right.length/done.length*100):0}%.</p>
+    ${wrong.length?`<h3 style="font-size:15px;margin:18px 0 8px">Các câu trả lời sai</h3><table class="list"><tr><th>Câu hỏi</th><th>Bạn chọn</th><th>Đáp án</th></tr>
+      ${wrong.map(q=>`<tr><td>${esc(q.type==='img'||q.type==='congDung'||q.type==='dacDiem'?q.q+' ('+byId(q.id).ten+')':q.q)}</td><td><span class="pill bad">${esc(q.pick)}</span></td><td><span class="pill ok">${esc(q.correct)}</span></td></tr>`).join('')}</table>`:''}
+    <div class="row" style="margin-top:16px"><span class="sp"></span><button class="btn pri" onclick="mq=null;vMCQ()">Làm bài mới</button></div></div>`;
+  mq.active=false;
+}
+
+/* ================= Quản lý dữ liệu ================= */
+function ghCfg(){
+  const c=LS.get('dl_gh',{});
+  if(!c.owner||!c.repo){const h=location.hostname;
+    if(h.endsWith('.github.io')){c.owner=c.owner||h.split('.')[0];c.repo=c.repo||location.pathname.split('/').filter(Boolean)[0]||h}}
+  c.branch=c.branch||'main'; return c;
+}
+function vAdmin(){
+  const c=ghCfg(),hasTok=!!c.token;
+  $('#view').innerHTML=`
+    <h2>Quản lý dữ liệu</h2><p class="sub">Thêm, sửa, xóa dược liệu rồi bấm "Đăng lên web" để mọi người cùng thấy. Phần này chỉ dành cho người quản lý.</p>
+    ${draft?`<div class="notice">Có thay đổi chưa đăng lên web. Những thay đổi này hiện chỉ lưu trên trình duyệt của máy này.</div>`:''}
+    <div id="pubMsg"></div>
+    <div class="panel">
+      <div class="row"><button class="btn pri" onclick="editPlant()">Thêm dược liệu mới</button><span class="sp"></span>
+        ${draft?`<button class="btn" onclick="discardDraft()">Hủy thay đổi</button>`:''}
+        <button class="btn pri" onclick="publish()" ${draft?'':'disabled'}>Đăng lên web</button></div>
+      <div style="overflow-x:auto;margin-top:14px"><table class="list">
+        <tr><th>#</th><th>Ảnh</th><th>Tên dược liệu</th><th class="hide-m">Tên khoa học</th><th class="hide-m">Họ</th><th></th></tr>
+        ${PL.map((p,i)=>{const pub=published.find(o=>o.id===p.id);const st=!pub?'<span class="pill new">Mới</span>':(JSON.stringify(pub)!==JSON.stringify(p)?'<span class="pill new">Đã sửa</span>':'');
+          return `<tr><td>${i+1}</td><td>${p.anh&&p.anh[0]?`<img src="${p.anh[0]}" alt="">`:''}</td><td>${esc(p.ten)} ${st}</td><td class="hide-m sci">${esc(p.khoaHoc)}</td><td class="hide-m">${esc(p.ho)}</td>
+          <td style="white-space:nowrap;text-align:right"><button class="btn sm" onclick="editPlant('${p.id}')">Sửa</button> <button class="btn sm danger" onclick="delPlant('${p.id}')">Xóa</button></td></tr>`}).join('')}
+      </table></div>
+    </div>
+    <div class="panel sec">
+      <h3>Kết nối GitHub ${hasTok?'<span class="pill ok">Đã kết nối</span>':'<span class="pill bad">Chưa kết nối</span>'}</h3>
+      <p class="hint" style="margin-top:0">Mã truy cập chỉ được lưu trên trình duyệt của máy này, không nằm trong mã nguồn của trang.</p>
+      <div class="form-grid">
+        <div><label class="f">Tài khoản (owner)</label><input type="text" id="ghO" value="${esc(c.owner||'')}"></div>
+        <div><label class="f">Kho (repository)</label><input type="text" id="ghR" value="${esc(c.repo||'')}"></div>
+        <div><label class="f">Nhánh (branch)</label><input type="text" id="ghB" value="${esc(c.branch)}"></div>
+        <div><label class="f">Mã truy cập (Personal access token)</label><input type="password" id="ghT" value="${esc(c.token||'')}" placeholder="github_pat_..."></div>
+      </div>
+      <div class="row" style="margin-top:12px"><button class="btn" onclick="saveCfg()">Lưu kết nối</button><button class="btn" onclick="testCfg()">Kiểm tra kết nối</button><span class="hint" id="cfgMsg"></span></div>
+    </div>
+    <div class="panel sec">
+      <h3>Sao lưu</h3>
+      <div class="row"><button class="btn" onclick="exportJSON()">Tải bản sao lưu (.json)</button>
+        <label class="btn">Nạp từ file sao lưu<input type="file" accept=".json" style="display:none" onchange="importJSON(this.files[0])"></label></div>
+    </div>`;
+}
+function saveDraft(list){
+  draft=list; PL=list;
+  if(!LS.set('dl_draft',list)){alertBox('Trình duyệt hết dung lượng lưu tạm. Hãy đăng lên web bớt rồi thêm tiếp.')}
+}
+function discardDraft(){if(!confirm('Hủy toàn bộ thay đổi chưa đăng?'))return;draft=null;LS.del('dl_draft');PL=published;route()}
+function delPlant(id){const p=byId(id);if(!confirm('Xóa "'+p.ten+'"?'))return;saveDraft(PL.filter(x=>x.id!==id));route()}
+let editImgs=[];
+function editPlant(id){
+  const p=id?byId(id):{id:'',ten:'',khoaHoc:'',ho:'',boPhan:'',thanhPhan:'',congDung:'',dacDiem:'',anh:[],nhan:true};
+  editImgs=(p.anh||[]).slice();
+  openModal(`<h2>${id?'Sửa dược liệu':'Thêm dược liệu mới'}</h2><p class="sub">Các mục có dấu * là bắt buộc.</p>
+    <div class="form-grid">
+      <div><label class="f">Tên dược liệu *</label><input type="text" id="e_ten" value="${esc(p.ten)}"></div>
+      <div><label class="f">Tên khoa học</label><input type="text" id="e_khoaHoc" value="${esc(p.khoaHoc)}"></div>
+      <div><label class="f">Họ (VD: Araliaceae (Nhân sâm))</label><input type="text" id="e_ho" value="${esc(p.ho)}" list="hoList">
+        <datalist id="hoList">${[...new Set(PL.map(x=>x.ho))].map(h=>`<option value="${esc(h)}">`).join('')}</datalist></div>
+      <div><label class="f">Bộ phận dùng</label><input type="text" id="e_boPhan" value="${esc(p.boPhan)}"></div>
+      <div class="full"><label class="f">Thành phần hóa học chính</label><input type="text" id="e_thanhPhan" value="${esc(p.thanhPhan)}"></div>
+      <div class="full"><label class="f">Công dụng</label><textarea id="e_congDung">${esc(p.congDung)}</textarea></div>
+      <div class="full"><label class="f">Đặc điểm nhận dạng (mỗi ý một dòng)</label><textarea id="e_dacDiem" rows="4">${esc(p.dacDiem)}</textarea></div>
+      <div class="full"><label class="f">Hình ảnh</label>
+        <label class="btn sm">Chọn ảnh từ máy<input type="file" accept="image/*" multiple style="display:none" onchange="addImgs(this.files)"></label>
+        <span class="hint" id="imgMsg"> Ảnh sẽ được tự động thu nhỏ.</span>
+        <div class="edit-imgs" id="eImgs"></div>
+        <label class="hint" style="display:flex;gap:8px;align-items:center;margin-top:8px"><input type="checkbox" id="e_nhan" ${p.nhan?'checked':''}> Ảnh đầu tiên có nhãn ghi tên (sẽ bị ẩn khi kiểm tra để không lộ đáp án)</label></div>
+    </div>
+    <div class="row" style="margin-top:16px"><span class="hint" id="eErr"></span><span class="sp"></span><button class="btn" onclick="closeModal()">Hủy</button><button class="btn pri" onclick="savePlant('${id||''}')">Lưu</button></div>`);
+  drawEditImgs();
+}
+function drawEditImgs(){$('#eImgs').innerHTML=editImgs.map((a,i)=>`<div class="it"><img src="${a}" alt=""><button onclick="editImgs.splice(${i},1);drawEditImgs()">Xóa</button></div>`).join('')}
+function resizeImg(file){return new Promise((res,rej)=>{const fr=new FileReader();fr.onload=()=>{const im=new Image();im.onload=()=>{
+  const M=800,s=Math.min(1,M/Math.max(im.width,im.height)),cv=document.createElement('canvas');cv.width=Math.round(im.width*s);cv.height=Math.round(im.height*s);
+  cv.getContext('2d').drawImage(im,0,0,cv.width,cv.height);res(cv.toDataURL('image/jpeg',0.72))};im.onerror=rej;im.src=fr.result};fr.onerror=rej;fr.readAsDataURL(file)})}
+async function addImgs(files){$('#imgMsg').textContent=' Đang xử lý ảnh...';for(const f of files){try{editImgs.push(await resizeImg(f))}catch(e){}}$('#imgMsg').textContent=' Ảnh sẽ được tự động thu nhỏ.';drawEditImgs()}
+function savePlant(id){
+  const v=k=>$('#e_'+k).value.trim();
+  if(!v('ten')){$('#eErr').textContent='Chưa nhập tên dược liệu.';return}
+  const obj={id:id||('p'+Date.now().toString(36)),ten:v('ten'),khoaHoc:v('khoaHoc'),ho:v('ho'),boPhan:v('boPhan'),thanhPhan:v('thanhPhan'),congDung:v('congDung'),dacDiem:v('dacDiem'),anh:editImgs.slice(),nhan:$('#e_nhan').checked};
+  const list=PL.slice(); const i=list.findIndex(x=>x.id===id); if(i>=0)list[i]=obj; else list.push(obj);
+  saveDraft(list); closeModal(); route();
+}
+function saveCfg(){const c={owner:$('#ghO').value.trim(),repo:$('#ghR').value.trim(),branch:$('#ghB').value.trim()||'main',token:$('#ghT').value.trim()};LS.set('dl_gh',c);$('#cfgMsg').textContent='Đã lưu.';}
+async function gh(path,opt={}){
+  const c=ghCfg();
+  const r=await fetch(`https://api.github.com/repos/${c.owner}/${c.repo}/${path}`,{cache:'no-store',...opt,headers:{'Authorization':'Bearer '+c.token,'Accept':'application/vnd.github+json',...(opt.headers||{})}});
+  if(!r.ok&&r.status!==404){let m='';try{m=(await r.json()).message}catch(e){}throw new Error(r.status+' '+m)}
+  return r.status===404?null:r.json();
+}
+async function testCfg(){saveCfg();$('#cfgMsg').textContent='Đang kiểm tra...';
+  try{const j=await gh('');$('#cfgMsg').textContent=j?(j.permissions&&j.permissions.push?'Kết nối thành công, có quyền ghi.':'Kết nối được nhưng mã không có quyền ghi.'):'Không tìm thấy kho.'}
+  catch(e){$('#cfgMsg').textContent='Lỗi: '+e.message+'. Kiểm tra lại mã truy cập.'}}
+const b64utf8=s=>{const b=new TextEncoder().encode(s);let o='';for(let i=0;i<b.length;i+=0x8000)o+=String.fromCharCode.apply(null,b.subarray(i,i+0x8000));return btoa(o)};
+async function putFile(path,b64,msg){
+  const c=ghCfg(); const cur=await gh('contents/'+path+'?ref='+encodeURIComponent(c.branch));
+  return gh('contents/'+path,{method:'PUT',body:JSON.stringify({message:msg,content:b64,branch:c.branch,...(cur&&cur.sha?{sha:cur.sha}:{})})});
+}
+async function publish(){
+  const c=ghCfg(); const box=$('#pubMsg');
+  if(!c.token||!c.owner||!c.repo){box.innerHTML='<div class="notice">Chưa kết nối GitHub. Điền thông tin ở mục "Kết nối GitHub" bên dưới trước.</div>';return}
+  const list=JSON.parse(JSON.stringify(PL)); const todo=[];
+  list.forEach(p=>(p.anh||[]).forEach((a,i)=>{if(a.startsWith('data:'))todo.push([p,i])}));
+  try{
+    let n=0;
+    for(const [p,i] of todo){
+      n++; box.innerHTML=`<div class="notice">Đang tải ảnh lên (${n}/${todo.length})...</div>`;
+      const path=`images/${p.id}-${Date.now().toString(36)}-${i+1}.jpg`;
+      await putFile(path,p.anh[i].split(',')[1],'Thêm ảnh '+p.ten); p.anh[i]=path;
+    }
+    box.innerHTML='<div class="notice">Đang cập nhật dữ liệu...</div>';
+    const today=new Date().toISOString().slice(0,10);
+    const payload={capNhat:today,cay:list};
+    await putFile('data/plants.json',b64utf8(JSON.stringify(payload,null,1)),'Cập nhật dữ liệu dược liệu ('+list.length+' cây)');
+    await putFile('data/plants.js',b64utf8('window.__PLANTS='+JSON.stringify(payload)+';'),'Cập nhật bản dữ liệu nhúng');
+    published=list; PL=list; draft=null; LS.del('dl_draft');
+    vAdmin(); setMeta();
+    $('#pubMsg').innerHTML='<div class="notice ok">Đã đăng thành công. Mọi người tải lại trang sau khoảng 1–2 phút sẽ thấy dữ liệu mới.</div>';
+  }catch(e){box.innerHTML='<div class="notice">Đăng không thành công: '+esc(e.message)+'. Các thay đổi vẫn được giữ, bạn có thể thử lại.</div>'}
+}
+function exportJSON(){
+  const blob=new Blob([JSON.stringify({capNhat:new Date().toISOString().slice(0,10),cay:PL},null,1)],{type:'application/json'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='duoc-lieu-sao-luu.json';a.click();
+}
+function importJSON(f){if(!f)return;const r=new FileReader();r.onload=()=>{try{const j=JSON.parse(r.result);const l=j.cay||j;if(!Array.isArray(l))throw 0;
+  if(confirm('Thay toàn bộ dữ liệu hiện tại bằng '+l.length+' dược liệu trong file? (Chọn Hủy để không làm gì)')){saveDraft(l);route()}}catch(e){alertBox('File không hợp lệ.')}};r.readAsText(f)}
+
+load();
+</script>
+</body>
+</html>
