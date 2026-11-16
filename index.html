@@ -510,10 +510,20 @@ function ghCfg(){
 }
 function vAdmin(){
   const c=ghCfg(),hasTok=!!c.token;
+  const LOGIN=`    <div class="panel sec">
+      <h3>Đăng nhập quản lý ${hasTok?'<span class="pill ok">Đã đăng nhập trên máy này</span>':'<span class="pill bad">Chưa đăng nhập</span>'}</h3>
+      ${hasTok?`<p class="hint" style="margin-top:0">Máy này đã có quyền đăng dữ liệu lên web. Dùng máy chung thì nhớ đăng xuất sau khi xong.</p>
+        <div class="row"><button class="btn" onclick="adminLogout()">Đăng xuất trên máy này</button></div>`
+      :`<p class="hint" style="margin-top:0">Nhập mật khẩu quản lý do chủ kho cung cấp để có quyền đăng dữ liệu lên web.</p>
+        <div class="row" style="flex-wrap:nowrap"><input type="password" id="admPw" placeholder="Mật khẩu quản lý" style="max-width:320px" onkeydown="if(event.key==='Enter')adminLogin()"><button class="btn pri" onclick="adminLogin()">Đăng nhập</button></div>`}
+      <p class="hint" id="admMsg" style="margin:10px 0 0"></p>
+    </div>
+`;
   $('#view').innerHTML=`
     <h2>Quản lý dữ liệu</h2><p class="sub">Thêm, sửa, xóa dược liệu rồi bấm "Đăng lên web" để mọi người cùng thấy. Phần này chỉ dành cho người quản lý.</p>
     ${draft?`<div class="notice">Có thay đổi chưa đăng lên web. Những thay đổi này hiện chỉ lưu trên trình duyệt của máy này.</div>`:''}
     <div id="pubMsg"></div>
+    ${hasTok?'':LOGIN.replace('panel sec','panel')+'<div style="height:16px"></div>'}
     <div class="panel">
       <div class="row"><button class="btn pri" onclick="editPlant()">Thêm dược liệu mới</button><span class="sp"></span>
         ${draft?`<button class="btn" onclick="discardDraft()">Hủy thay đổi</button>`:''}
@@ -525,17 +535,27 @@ function vAdmin(){
           <td style="white-space:nowrap;text-align:right"><button class="btn sm" onclick="editPlant('${p.id}')">Sửa</button> <button class="btn sm danger" onclick="delPlant('${p.id}')">Xóa</button></td></tr>`}).join('')}
       </table></div>
     </div>
-    <div class="panel sec">
-      <h3>Kết nối GitHub ${hasTok?'<span class="pill ok">Đã kết nối</span>':'<span class="pill bad">Chưa kết nối</span>'}</h3>
-      <p class="hint" style="margin-top:0">Mã truy cập chỉ được lưu trên trình duyệt của máy này, không nằm trong mã nguồn của trang.</p>
+    ${hasTok?LOGIN:''}
+    ${hasTok&&c.via!=='pw'?`<div class="panel sec">
+      <h3>Đặt mật khẩu quản lý (dành cho chủ kho)</h3>
+      <p class="hint" style="margin-top:0">Người quản lý khác chỉ cần nhập mật khẩu này để đăng dữ liệu, không cần tài khoản GitHub. Đặt lại mật khẩu thì mật khẩu cũ hết tác dụng. Nên dùng mật khẩu dài (từ 10 ký tự) và khó đoán.</p>
+      <div class="form-grid">
+        <div><label class="f">Mật khẩu mới</label><input type="password" id="pw1"></div>
+        <div><label class="f">Nhập lại mật khẩu</label><input type="password" id="pw2"></div>
+      </div>
+      <div class="row" style="margin-top:12px"><button class="btn pri" onclick="setAdminPw()">Lưu mật khẩu quản lý</button><span class="hint" id="pwMsg"></span></div>
+    </div>`:''}
+    <details class="panel sec" ${hasTok&&c.via!=='pw'?'':''}>
+      <summary style="cursor:pointer;font-weight:650">Kết nối bằng mã GitHub (dành cho chủ kho)</summary>
+      <p class="hint">Mã truy cập chỉ được lưu trên trình duyệt của máy này, không nằm trong mã nguồn của trang.</p>
       <div class="form-grid">
         <div><label class="f">Tài khoản (owner)</label><input type="text" id="ghO" value="${esc(c.owner||'')}"></div>
         <div><label class="f">Kho (repository)</label><input type="text" id="ghR" value="${esc(c.repo||'')}"></div>
         <div><label class="f">Nhánh (branch)</label><input type="text" id="ghB" value="${esc(c.branch)}"></div>
-        <div><label class="f">Mã truy cập (Personal access token)</label><input type="password" id="ghT" value="${esc(c.token||'')}" placeholder="github_pat_..."></div>
+        <div><label class="f">Mã truy cập (Personal access token)</label><input type="password" id="ghT" value="${c.via==='pw'?'':esc(c.token||'')}" placeholder="github_pat_..."></div>
       </div>
       <div class="row" style="margin-top:12px"><button class="btn" onclick="saveCfg()">Lưu kết nối</button><button class="btn" onclick="testCfg()">Kiểm tra kết nối</button><span class="hint" id="cfgMsg"></span></div>
-    </div>
+    </details>
     <div class="panel sec">
       <h3>Sao lưu</h3>
       <div class="row"><button class="btn" onclick="exportJSON()">Tải bản sao lưu (.json)</button>
@@ -583,7 +603,7 @@ function savePlant(id){
   const list=PL.slice(); const i=list.findIndex(x=>x.id===id); if(i>=0)list[i]=obj; else list.push(obj);
   saveDraft(list); closeModal(); route();
 }
-function saveCfg(){const c={owner:$('#ghO').value.trim(),repo:$('#ghR').value.trim(),branch:$('#ghB').value.trim()||'main',token:$('#ghT').value.replace(/\s+/g,'')};LS.set('dl_gh',c);$('#cfgMsg').textContent='Đã lưu.';}
+function saveCfg(){const c={owner:$('#ghO').value.trim(),repo:$('#ghR').value.trim(),branch:$('#ghB').value.trim()||'main',token:$('#ghT').value.replace(/\s+/g,''),via:'token'};LS.set('dl_gh',c);$('#cfgMsg').textContent='Đã lưu.';}
 async function gh(path,opt={}){
   const c=ghCfg();
   const url=`https://api.github.com/repos/${encodeURIComponent(c.owner)}/${encodeURIComponent(c.repo)}`+(path?'/'+path:'');
@@ -600,6 +620,47 @@ async function testCfg(){saveCfg();const msg=t=>{const el=$('#cfgMsg');if(el)el.
     if(j.permissions&&j.permissions.push){vAdmin();msg('Kết nối thành công, có quyền ghi.')}
     else msg('Kết nối được nhưng tài khoản của mã này không có quyền ghi vào kho.');
   }catch(e){msg('Lỗi: '+e.message+'.')}}
+
+/* ---- Mật khẩu quản lý: mã GitHub của chủ kho được mã hóa bằng mật khẩu (AES-GCM + PBKDF2) ---- */
+const u8b64=u=>{let o='';u.forEach(b=>o+=String.fromCharCode(b));return btoa(o)};
+const b64u8=s=>Uint8Array.from(atob(s),c=>c.charCodeAt(0));
+async function pwKey(pw,salt,iter){
+  const base=await crypto.subtle.importKey('raw',new TextEncoder().encode(pw),'PBKDF2',false,['deriveKey']);
+  return crypto.subtle.deriveKey({name:'PBKDF2',salt,iterations:iter,hash:'SHA-256'},base,{name:'AES-GCM',length:256},false,['encrypt','decrypt']);
+}
+async function setAdminPw(){
+  const msg=t=>{const el=$('#pwMsg');if(el)el.textContent=t};
+  const p1=$('#pw1').value,p2=$('#pw2').value,c=ghCfg();
+  if(p1.length<8)return msg('Mật khẩu cần ít nhất 8 ký tự.');
+  if(p1!==p2)return msg('Hai mật khẩu không khớp.');
+  if(!c.token)return msg('Chưa có mã GitHub trên máy này.');
+  msg('Đang lưu...');
+  try{
+    const iter=310000,salt=crypto.getRandomValues(new Uint8Array(16)),iv=crypto.getRandomValues(new Uint8Array(12));
+    const key=await pwKey(p1,salt,iter);
+    const ct=new Uint8Array(await crypto.subtle.encrypt({name:'AES-GCM',iv},key,new TextEncoder().encode(JSON.stringify({owner:c.owner,repo:c.repo,branch:c.branch,token:c.token}))));
+    await putFile('data/admin.json',b64utf8(JSON.stringify({v:1,iter,salt:u8b64(salt),iv:u8b64(iv),ct:u8b64(ct)})),'Đặt mật khẩu quản lý');
+    $('#pw1').value=$('#pw2').value='';
+    msg('Đã lưu. Gửi mật khẩu này cho người quản lý khác (khoảng 1–2 phút sau mới dùng được).');
+  }catch(e){msg('Không lưu được: '+e.message)}
+}
+async function adminLogin(){
+  const msg=t=>{const el=$('#admMsg');if(el)el.textContent=t};
+  const pw=$('#admPw').value; if(!pw)return msg('Chưa nhập mật khẩu.');
+  msg('Đang kiểm tra...');
+  let a;
+  try{const r=await fetch('data/admin.json?t='+Date.now(),{cache:'no-store'});if(!r.ok)throw 0;a=await r.json()}
+  catch(e){return msg('Chủ kho chưa đặt mật khẩu quản lý.')}
+  let cfg;
+  try{const key=await pwKey(pw,b64u8(a.salt),a.iter);
+    cfg=JSON.parse(new TextDecoder().decode(await crypto.subtle.decrypt({name:'AES-GCM',iv:b64u8(a.iv)},key,b64u8(a.ct))));}
+  catch(e){return msg('Sai mật khẩu.')}
+  LS.set('dl_gh',{...cfg,via:'pw'});
+  try{const j=await gh('');if(!j||!(j.permissions&&j.permissions.push)){LS.del('dl_gh');return msg('Mật khẩu đúng nhưng mã GitHub của chủ kho đã hết hạn hoặc bị thu hồi. Báo chủ kho đặt lại.')}}
+  catch(e){LS.del('dl_gh');return msg('Mật khẩu đúng nhưng chưa kết nối được GitHub: '+e.message)}
+  vAdmin(); const m=$('#admMsg'); if(m)m.textContent='Đăng nhập thành công. Giờ bạn có thể thêm dược liệu và bấm "Đăng lên web".';
+}
+function adminLogout(){LS.del('dl_gh');vAdmin()}
 const b64utf8=s=>{const b=new TextEncoder().encode(s);let o='';for(let i=0;i<b.length;i+=0x8000)o+=String.fromCharCode.apply(null,b.subarray(i,i+0x8000));return btoa(o)};
 async function putFile(path,b64,msg){
   const c=ghCfg(); const cur=await gh('contents/'+path+'?ref='+encodeURIComponent(c.branch));
@@ -607,7 +668,7 @@ async function putFile(path,b64,msg){
 }
 async function publish(){
   const c=ghCfg(); const box=$('#pubMsg');
-  if(!c.token||!c.owner||!c.repo){box.innerHTML='<div class="notice">Chưa kết nối GitHub. Điền thông tin ở mục "Kết nối GitHub" bên dưới trước.</div>';return}
+  if(!c.token||!c.owner||!c.repo){box.innerHTML='<div class="notice">Chưa đăng nhập quản lý. Nhập mật khẩu quản lý ở mục "Đăng nhập quản lý" bên dưới trước.</div>';return}
   const list=JSON.parse(JSON.stringify(PL)); const todo=[];
   list.forEach(p=>(p.anh||[]).forEach((a,i)=>{if(a.startsWith('data:'))todo.push([p,i])}));
   try{
