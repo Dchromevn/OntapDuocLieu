@@ -583,16 +583,23 @@ function savePlant(id){
   const list=PL.slice(); const i=list.findIndex(x=>x.id===id); if(i>=0)list[i]=obj; else list.push(obj);
   saveDraft(list); closeModal(); route();
 }
-function saveCfg(){const c={owner:$('#ghO').value.trim(),repo:$('#ghR').value.trim(),branch:$('#ghB').value.trim()||'main',token:$('#ghT').value.trim()};LS.set('dl_gh',c);$('#cfgMsg').textContent='Đã lưu.';}
+function saveCfg(){const c={owner:$('#ghO').value.trim(),repo:$('#ghR').value.trim(),branch:$('#ghB').value.trim()||'main',token:$('#ghT').value.replace(/\s+/g,'')};LS.set('dl_gh',c);$('#cfgMsg').textContent='Đã lưu.';}
 async function gh(path,opt={}){
   const c=ghCfg();
-  const r=await fetch(`https://api.github.com/repos/${c.owner}/${c.repo}/${path}`,{cache:'no-store',...opt,headers:{'Authorization':'Bearer '+c.token,'Accept':'application/vnd.github+json',...(opt.headers||{})}});
+  const url=`https://api.github.com/repos/${encodeURIComponent(c.owner)}/${encodeURIComponent(c.repo)}`+(path?'/'+path:'');
+  let r;
+  try{r=await fetch(url,{cache:'no-store',...opt,headers:{'Authorization':'Bearer '+c.token,'Accept':'application/vnd.github+json',...(opt.headers||{})}})}
+  catch(e){throw new Error('Không gọi được tới GitHub (mạng hoặc tiện ích chặn quảng cáo đang chặn api.github.com)')}
+  if(r.status===401)throw new Error('Mã truy cập không đúng hoặc đã hết hạn');
   if(!r.ok&&r.status!==404){let m='';try{m=(await r.json()).message}catch(e){}throw new Error(r.status+' '+m)}
   return r.status===404?null:r.json();
 }
-async function testCfg(){saveCfg();$('#cfgMsg').textContent='Đang kiểm tra...';
-  try{const j=await gh('');$('#cfgMsg').textContent=j?(j.permissions&&j.permissions.push?'Kết nối thành công, có quyền ghi.':'Kết nối được nhưng mã không có quyền ghi.'):'Không tìm thấy kho.'}
-  catch(e){$('#cfgMsg').textContent='Lỗi: '+e.message+'. Kiểm tra lại mã truy cập.'}}
+async function testCfg(){saveCfg();const msg=t=>{const el=$('#cfgMsg');if(el)el.textContent=t};msg('Đang kiểm tra...');
+  try{const j=await gh('');
+    if(!j)return msg('Không tìm thấy kho, hoặc mã không có quyền truy cập kho này.');
+    if(j.permissions&&j.permissions.push){vAdmin();msg('Kết nối thành công, có quyền ghi.')}
+    else msg('Kết nối được nhưng tài khoản của mã này không có quyền ghi vào kho.');
+  }catch(e){msg('Lỗi: '+e.message+'.')}}
 const b64utf8=s=>{const b=new TextEncoder().encode(s);let o='';for(let i=0;i<b.length;i+=0x8000)o+=String.fromCharCode.apply(null,b.subarray(i,i+0x8000));return btoa(o)};
 async function putFile(path,b64,msg){
   const c=ghCfg(); const cur=await gh('contents/'+path+'?ref='+encodeURIComponent(c.branch));
