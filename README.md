@@ -1,6 +1,5 @@
 # Ôn tập Dược liệu
-
-🌿 **Vào web:** https://dchromevn.github.io/OntapDuocLieu/
+**Vào web:** https://dchromevn.github.io/OntapDuocLieu/
 
 Web ôn tập nhận biết dược liệu, dùng được trên cả máy tính và điện thoại, không cần đăng nhập:
 
@@ -34,27 +33,6 @@ Có thể quản lý từ nhiều máy cùng lúc: khi đăng, web chỉ cập n
 
 ---
 
-## Dành cho chủ kho
-
-### Kết nối GitHub lần đầu
-
-1. Vào https://github.com/settings/personal-access-tokens/new
-2. **Token name**: `ontapduoclieu`. **Expiration**: chọn thời hạn dài (ví dụ 1 năm).
-3. **Repository access**: chọn *Only select repositories*, rồi chọn kho `OntapDuocLieu`.
-4. **Permissions**, mục *Repository permissions*: đặt **Contents** thành **Read and write**.
-5. Bấm **Generate token** và sao chép mã (bắt đầu bằng `github_pat_...`).
-6. Trên web, vào tab **Quản lý dữ liệu**, mục **Kết nối bằng mã GitHub**. Dán mã, bấm **Lưu kết nối** rồi **Kiểm tra kết nối**.
-
-Mã chỉ lưu trên trình duyệt của máy đó, không nằm trong mã nguồn. Không gửi mã này cho người khác.
-
-### Cấp quyền cho người quản lý khác
-
-Ở mục **Đặt mật khẩu quản lý**, đặt một mật khẩu (nên từ 10 ký tự trở lên) rồi gửi mật khẩu đó cho người quản lý. Họ không cần tài khoản GitHub. Đặt lại mật khẩu thì mật khẩu cũ hết tác dụng.
-
-Khi mã GitHub hết hạn, hãy tạo mã mới, kết nối lại, rồi **đặt lại mật khẩu quản lý**.
-
----
-
 ## Cấu trúc thư mục
 
 | Đường dẫn | Nội dung |
@@ -64,5 +42,3 @@ Khi mã GitHub hết hạn, hãy tạo mã mới, kết nối lại, rồi **đ�
 | `data/plants.js` | Bản dữ liệu nhúng, dùng khi mở `index.html` trực tiếp trên máy, không qua mạng |
 | `data/admin.json` | Thông tin đăng nhập quản lý đã được mã hóa |
 | `images/` | Ảnh dược liệu |
-
-Để dùng không cần mạng: tải cả kho về (**Code → Download ZIP**), giải nén rồi mở `index.html`.
