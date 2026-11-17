@@ -431,7 +431,10 @@
    "thanhPhan": "Tinh dầu, Coumarin",
    "congDung": "Chữa cảm sốt, nhức đầu, đặc biệt vùng trán, đau nhức răng, mụn nhọt",
    "dacDiem": "Cứng, có nhiều sẹo lồi nhô lên, bên trong màu trắng",
-   "anh": [],
+   "anh": [
+    "images/pmwkjy8yp-mwkkosfl-1.jpg",
+    "images/pmwkjy8yp-mwkkounn-2.jpg"
+   ],
    "nhan": true
   },
   {
@@ -455,7 +458,10 @@
    "thanhPhan": "Flavonoid",
    "congDung": "Chữa cao huyết áp, xuất huyết, chảy máu cam, ho ra máu",
    "dacDiem": "Nụ hoa xanh đến vàng",
-   "anh": [],
+   "anh": [
+    "images/pmwkk0xkl-mwkkowxc-1.jpg",
+    "images/pmwkk0xkl-mwkkozec-2.jpg"
+   ],
    "nhan": true
   },
   {
@@ -467,7 +473,10 @@
    "thanhPhan": "Flavonoid, Saponin",
    "congDung": "Chữa mụn nhọt, dị ứng",
    "dacDiem": "Hoa vàng, nhị và nhụy thò ra ngoài tràng, gần giống khô gà",
-   "anh": [],
+   "anh": [
+    "images/pmwkk3eni-mwkkp1x7-1.jpg",
+    "images/pmwkk3eni-mwkkp4aw-2.jpg"
+   ],
    "nhan": true
   },
   {
@@ -479,7 +488,10 @@
    "thanhPhan": "Flavonoid, Saponin",
    "congDung": "Chữa mụn nhọt, dị ứng, đau khớp, đau dây thần kinh",
    "dacDiem": "Lõi thân to và có lỗ tròn, lá to",
-   "anh": [],
+   "anh": [
+    "images/pmwkk58gl-mwkkp6qs-1.jpg",
+    "images/pmwkk58gl-mwkkp91w-2.jpg"
+   ],
    "nhan": true
   },
   {
@@ -491,7 +503,10 @@
    "thanhPhan": "Flavonoid",
    "congDung": "Chữa đau nhức xương khớp, chân tay co duỗi khó khăn",
    "dacDiem": "Miếng cắt vát",
-   "anh": [],
+   "anh": [
+    "images/pmwkk69wr-mwkkpblr-1.jpg",
+    "images/pmwkk69wr-mwkkpdxb-2.jpg"
+   ],
    "nhan": true
   },
   {
@@ -503,7 +518,10 @@
    "thanhPhan": "Flavonoid",
    "congDung": "Chữa cảm mạo phong nhiệt, ho do phế nhiệt",
    "dacDiem": "Lá cuống nhỏ dài, lá hơi sần, có lá vàng",
-   "anh": [],
+   "anh": [
+    "images/pmwkk7ajd-mwkkpgeg-1.jpg",
+    "images/pmwkk7ajd-mwkkpiow-2.jpg"
+   ],
    "nhan": true
   },
   {
@@ -515,7 +533,10 @@
    "thanhPhan": "Flavonoid, Tanin",
    "congDung": "Chữa ho, phù thũng, tiểu tiện ít",
    "dacDiem": "Khó bẻ, nhưng lõi ở trong trắng, dễ tước",
-   "anh": [],
+   "anh": [
+    "images/pmwkkdtw9-mwkkpksw-1.jpg",
+    "images/pmwkkdtw9-mwkkpnyo-2.jpg"
+   ],
    "nhan": true
   },
   {
@@ -527,7 +548,10 @@
    "thanhPhan": "Flavonoid",
    "congDung": "Chữa đau dạ dày, tá tràng, viêm đại tràng, chậm liền sẹo",
    "dacDiem": "Trên lá có vết màu trắng giống như mốc",
-   "anh": [],
+   "anh": [
+    "images/pmwkkeqx1-mwkkpq94-1.jpg",
+    "images/pmwkkeqx1-mwkkpsjo-2.jpg"
+   ],
    "nhan": true
   },
   {
@@ -539,7 +563,10 @@
    "thanhPhan": "Tinh dầu, Flavonoid",
    "congDung": "Chữa nhức đầu, hoa mắt, chóng mặt, cao huyết áp, đau mắt đỏ, mắt mờ, chảy nước mắt",
    "dacDiem": "màu vàng của Cúc",
-   "anh": [],
+   "anh": [
+    "images/pmwkkfmxb-mwkkpuog-1.jpg",
+    "images/pmwkkfmxb-mwkkpxov-2.jpg"
+   ],
    "nhan": true
   }
  ]
