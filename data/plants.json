@@ -1,5 +1,5 @@
 {
- "capNhat": "2026-11-16",
+ "capNhat": "2026-11-17",
  "cay": [
   {
    "id": "p01",
@@ -420,6 +420,126 @@
     "images/p28-1.jpg",
     "images/p28-2.jpg"
    ],
+   "nhan": true
+  },
+  {
+   "id": "pmwkjy8yp",
+   "ten": "Bạch chỉ",
+   "khoaHoc": "Angelica dahurica",
+   "ho": "Apiaceae - Cần",
+   "boPhan": "Rễ",
+   "thanhPhan": "Tinh dầu, Coumarin",
+   "congDung": "Chữa cảm sốt, nhức đầu, đặc biệt vùng trán, đau nhức răng, mụn nhọt",
+   "dacDiem": "Cứng, có nhiều sẹo lồi nhô lên, bên trong màu trắng",
+   "anh": [],
+   "nhan": true
+  },
+  {
+   "id": "pmwkjzt55",
+   "ten": "Sài đất",
+   "khoaHoc": "Wedelia chinensis",
+   "ho": "Asteraceae (Cúc)",
+   "boPhan": "Phần trên mặt đất",
+   "thanhPhan": "Flavonoid, Coumarin",
+   "congDung": "Chữa rôm sẩy, mụn nhọt, lở loét, các bệnh viêm nhiễm như viêm tuyến sữa, viêm mũi họng",
+   "dacDiem": "Có lẫn lá màu xanh sáng, đốt bé",
+   "anh": [],
+   "nhan": true
+  },
+  {
+   "id": "pmwkk0xkl",
+   "ten": "Hòe",
+   "khoaHoc": "Styphnolobium japonicum",
+   "ho": "Fabaceae - Đậu",
+   "boPhan": "",
+   "thanhPhan": "Flavonoid",
+   "congDung": "Chữa cao huyết áp, xuất huyết, chảy máu cam, ho ra máu",
+   "dacDiem": "Nụ hoa xanh đến vàng",
+   "anh": [],
+   "nhan": true
+  },
+  {
+   "id": "pmwkk3eni",
+   "ten": "Kim ngân hoa",
+   "khoaHoc": "Lonicera japonica",
+   "ho": "Caprifoliaceae - Kim ngân",
+   "boPhan": "Nụ hoa",
+   "thanhPhan": "Flavonoid, Saponin",
+   "congDung": "Chữa mụn nhọt, dị ứng",
+   "dacDiem": "Hoa vàng, nhị và nhụy thò ra ngoài tràng, gần giống khô gà",
+   "anh": [],
+   "nhan": true
+  },
+  {
+   "id": "pmwkk58gl",
+   "ten": "Kim ngân cuộng",
+   "khoaHoc": "Lonicera japonica",
+   "ho": "Caprifoliaceae - Kim ngân",
+   "boPhan": "Cành và lá",
+   "thanhPhan": "Flavonoid, Saponin",
+   "congDung": "Chữa mụn nhọt, dị ứng, đau khớp, đau dây thần kinh",
+   "dacDiem": "Lõi thân to và có lỗ tròn, lá to",
+   "anh": [],
+   "nhan": true
+  },
+  {
+   "id": "pmwkk69wr",
+   "ten": "Tang chi",
+   "khoaHoc": "Morus alba",
+   "ho": "Moraceae - Dâu tằm",
+   "boPhan": "Cành non",
+   "thanhPhan": "Flavonoid",
+   "congDung": "Chữa đau nhức xương khớp, chân tay co duỗi khó khăn",
+   "dacDiem": "Miếng cắt vát",
+   "anh": [],
+   "nhan": true
+  },
+  {
+   "id": "pmwkk7ajd",
+   "ten": "Tang diệp",
+   "khoaHoc": "Morus alba",
+   "ho": "Moraceae - Dâu tằm",
+   "boPhan": "Lá",
+   "thanhPhan": "Flavonoid",
+   "congDung": "Chữa cảm mạo phong nhiệt, ho do phế nhiệt",
+   "dacDiem": "Lá cuống nhỏ dài, lá hơi sần, có lá vàng",
+   "anh": [],
+   "nhan": true
+  },
+  {
+   "id": "pmwkkdtw9",
+   "ten": "Tang bạch bì",
+   "khoaHoc": "Morus alba",
+   "ho": "Moraceae - Dâu tằm",
+   "boPhan": "Vỏ rễ đã cạo lớp bần",
+   "thanhPhan": "Flavonoid, Tanin",
+   "congDung": "Chữa ho, phù thũng, tiểu tiện ít",
+   "dacDiem": "Khó bẻ, nhưng lõi ở trong trắng, dễ tước",
+   "anh": [],
+   "nhan": true
+  },
+  {
+   "id": "pmwkkeqx1",
+   "ten": "Chè dây",
+   "khoaHoc": "Ampelopsis cantoniensis",
+   "ho": "Vitaceae - Nho",
+   "boPhan": "Lá",
+   "thanhPhan": "Flavonoid",
+   "congDung": "Chữa đau dạ dày, tá tràng, viêm đại tràng, chậm liền sẹo",
+   "dacDiem": "Trên lá có vết màu trắng giống như mốc",
+   "anh": [],
+   "nhan": true
+  },
+  {
+   "id": "pmwkkfmxb",
+   "ten": "Cúc hoa vàng",
+   "khoaHoc": "Chrysanthemum indicum",
+   "ho": "Asteraceae - Cúc",
+   "boPhan": "Cụm hoa",
+   "thanhPhan": "Tinh dầu, Flavonoid",
+   "congDung": "Chữa nhức đầu, hoa mắt, chóng mặt, cao huyết áp, đau mắt đỏ, mắt mờ, chảy nước mắt",
+   "dacDiem": "màu vàng của Cúc",
+   "anh": [],
    "nhan": true
   }
  ]
