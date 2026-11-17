@@ -431,10 +431,7 @@
    "thanhPhan": "Tinh dầu, Coumarin",
    "congDung": "Chữa cảm sốt, nhức đầu, đặc biệt vùng trán, đau nhức răng, mụn nhọt",
    "dacDiem": "Cứng, có nhiều sẹo lồi nhô lên, bên trong màu trắng",
-   "anh": [
-    "images/pmwkjy8yp-mwkkosfl-1.jpg",
-    "images/pmwkjy8yp-mwkkounn-2.jpg"
-   ],
+   "anh": [],
    "nhan": true
   },
   {
@@ -458,10 +455,7 @@
    "thanhPhan": "Flavonoid",
    "congDung": "Chữa cao huyết áp, xuất huyết, chảy máu cam, ho ra máu",
    "dacDiem": "Nụ hoa xanh đến vàng",
-   "anh": [
-    "images/pmwkk0xkl-mwkkowxc-1.jpg",
-    "images/pmwkk0xkl-mwkkozec-2.jpg"
-   ],
+   "anh": [],
    "nhan": true
   },
   {
@@ -473,10 +467,7 @@
    "thanhPhan": "Flavonoid, Saponin",
    "congDung": "Chữa mụn nhọt, dị ứng",
    "dacDiem": "Hoa vàng, nhị và nhụy thò ra ngoài tràng, gần giống khô gà",
-   "anh": [
-    "images/pmwkk3eni-mwkkp1x7-1.jpg",
-    "images/pmwkk3eni-mwkkp4aw-2.jpg"
-   ],
+   "anh": [],
    "nhan": true
   },
   {
@@ -488,10 +479,7 @@
    "thanhPhan": "Flavonoid, Saponin",
    "congDung": "Chữa mụn nhọt, dị ứng, đau khớp, đau dây thần kinh",
    "dacDiem": "Lõi thân to và có lỗ tròn, lá to",
-   "anh": [
-    "images/pmwkk58gl-mwkkp6qs-1.jpg",
-    "images/pmwkk58gl-mwkkp91w-2.jpg"
-   ],
+   "anh": [],
    "nhan": true
   },
   {
@@ -503,10 +491,7 @@
    "thanhPhan": "Flavonoid",
    "congDung": "Chữa đau nhức xương khớp, chân tay co duỗi khó khăn",
    "dacDiem": "Miếng cắt vát",
-   "anh": [
-    "images/pmwkk69wr-mwkkpblr-1.jpg",
-    "images/pmwkk69wr-mwkkpdxb-2.jpg"
-   ],
+   "anh": [],
    "nhan": true
   },
   {
@@ -518,10 +503,7 @@
    "thanhPhan": "Flavonoid",
    "congDung": "Chữa cảm mạo phong nhiệt, ho do phế nhiệt",
    "dacDiem": "Lá cuống nhỏ dài, lá hơi sần, có lá vàng",
-   "anh": [
-    "images/pmwkk7ajd-mwkkpgeg-1.jpg",
-    "images/pmwkk7ajd-mwkkpiow-2.jpg"
-   ],
+   "anh": [],
    "nhan": true
   },
   {
@@ -533,10 +515,7 @@
    "thanhPhan": "Flavonoid, Tanin",
    "congDung": "Chữa ho, phù thũng, tiểu tiện ít",
    "dacDiem": "Khó bẻ, nhưng lõi ở trong trắng, dễ tước",
-   "anh": [
-    "images/pmwkkdtw9-mwkkpksw-1.jpg",
-    "images/pmwkkdtw9-mwkkpnyo-2.jpg"
-   ],
+   "anh": [],
    "nhan": true
   },
   {
@@ -548,10 +527,7 @@
    "thanhPhan": "Flavonoid",
    "congDung": "Chữa đau dạ dày, tá tràng, viêm đại tràng, chậm liền sẹo",
    "dacDiem": "Trên lá có vết màu trắng giống như mốc",
-   "anh": [
-    "images/pmwkkeqx1-mwkkpq94-1.jpg",
-    "images/pmwkkeqx1-mwkkpsjo-2.jpg"
-   ],
+   "anh": [],
    "nhan": true
   },
   {
@@ -563,10 +539,91 @@
    "thanhPhan": "Tinh dầu, Flavonoid",
    "congDung": "Chữa nhức đầu, hoa mắt, chóng mặt, cao huyết áp, đau mắt đỏ, mắt mờ, chảy nước mắt",
    "dacDiem": "màu vàng của Cúc",
-   "anh": [
-    "images/pmwkkfmxb-mwkkpuog-1.jpg",
-    "images/pmwkkfmxb-mwkkpxov-2.jpg"
-   ],
+   "anh": [],
+   "nhan": true
+  },
+  {
+   "id": "pmwkktuyv",
+   "ten": "Cát căn",
+   "khoaHoc": "Pueraria thomsonii",
+   "ho": "Fabaceae - Đậu",
+   "boPhan": "Rễ củ",
+   "thanhPhan": "Tinh bột, Flavonoid",
+   "congDung": "Chữa sốt cảm nóng, giải nhiệt, lỵ, tiêu chảy",
+   "dacDiem": "Màu trắng, có xơ phân biệt với Hoài Sơn",
+   "anh": [],
+   "nhan": true
+  },
+  {
+   "id": "pmwkldvr7",
+   "ten": "Hoài sơn",
+   "khoaHoc": "Dioscorea persimilis",
+   "ho": "Dioscoreaceae - Củ nâu",
+   "boPhan": "Rễ củ",
+   "thanhPhan": "Tinh bột, Saponin",
+   "congDung": "Chữa kém ăn, tiêu chảy lâu ngày, di tinh, tiểu đêm",
+   "dacDiem": "Màu trắng",
+   "anh": [],
+   "nhan": true
+  },
+  {
+   "id": "pmwklfmlu",
+   "ten": "Hoàng kỳ",
+   "khoaHoc": "Astragalus membranaceus",
+   "ho": "Fabaceae - Đậu",
+   "boPhan": "Rễ",
+   "thanhPhan": "Polysacharid, saponin (astragalosid)",
+   "congDung": "Dùng sống chữa đái tháo đường, đái buốt, phù thũng. Hoàng kỳ chế mật chữa suy nhược lâu ngày, mệt mỏi, kém ăn, ra nhiều mồ hôi",
+   "dacDiem": "",
+   "anh": [],
+   "nhan": true
+  },
+  {
+   "id": "pmwklgniv",
+   "ten": "Tô mộc",
+   "khoaHoc": "Caesalpinia sappan",
+   "ho": "Fabaceae - Đậu",
+   "boPhan": "Gỗ lõi để nguyên hay chẻ nhỏ",
+   "thanhPhan": "Flavonoid, Tanin",
+   "congDung": "Chữa đau bụng kinh, sản hậu huyết ứ, sưng đau do sang chấn",
+   "dacDiem": "Giống gỗ bên trong màu hơi cam",
+   "anh": [],
+   "nhan": true
+  },
+  {
+   "id": "pmwklhi0r",
+   "ten": "Nhân trần",
+   "khoaHoc": "Adenosma caeruleum",
+   "ho": "Scrophulariaceae - Hoa mõm chó",
+   "boPhan": "Thân mang cành lá, hoa",
+   "thanhPhan": "Tinh dầu",
+   "congDung": "Chữa viêm gan, vàng da, tiêu hóa kém ở phụ nữ sau sinh",
+   "dacDiem": "Đốt có lông, màu nâu đen",
+   "anh": [],
+   "nhan": true
+  },
+  {
+   "id": "pmwkliiec",
+   "ten": "Bồ công anh",
+   "khoaHoc": "Lactuca indica",
+   "ho": "Asteraceae - Cúc",
+   "boPhan": "Thân mang lá",
+   "thanhPhan": "Flavonoid",
+   "congDung": "Chữa mụn nhọt, tắc tia sữa, viêm tuyến vú",
+   "dacDiem": "Khô, nhăn gần giống Ngải cứu",
+   "anh": [],
+   "nhan": true
+  },
+  {
+   "id": "pmwklk46n",
+   "ten": "Cà gai leo",
+   "khoaHoc": "Solanum procumbens",
+   "ho": "Solanaceae - Cà",
+   "boPhan": "Phần trên mặt đất",
+   "thanhPhan": "Glycoalcaloid",
+   "congDung": "Đau nhức các đầu gân xương, ho khan, xơ gan,viêm nhiễm quanh răng",
+   "dacDiem": "Đốt bé, có gai nhọn",
+   "anh": [],
    "nhan": true
   }
  ]
