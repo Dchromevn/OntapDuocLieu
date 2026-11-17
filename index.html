@@ -168,6 +168,18 @@ const LS={get(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}
 let published=[];     // dữ liệu trên web
 let PL=[];            // dữ liệu đang dùng (có thể gồm bản nháp của người quản lý)
 let draft=LS.get('dl_draft',null);
+// Ghi nhớ những cây đã sửa/xóa trên máy này, để khi đăng chỉ ghi đè đúng những cây đó
+// (tránh bản nháp cũ trên máy khác xóa mất ảnh/dữ liệu đã đăng từ máy khác)
+let dirty=LS.get('dl_dirty',null)||{ids:[],del:[],all:!!draft};
+function markDirty(f){f(dirty);LS.set('dl_dirty',dirty)}
+function applyDraft(remote){
+  if(!draft)return remote;
+  if(dirty.all)return draft;
+  const loc=new Map(draft.map(p=>[p.id,p]));
+  const out=remote.filter(p=>!dirty.del.includes(p.id)).map(p=>dirty.ids.includes(p.id)&&loc.has(p.id)?loc.get(p.id):p);
+  draft.forEach(p=>{if(dirty.ids.includes(p.id)&&!out.some(o=>o.id===p.id))out.push(p)});
+  return out;
+}
 const $=s=>document.querySelector(s);
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const norm=s=>String(s||'').normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/đ/g,'d').replace(/Đ/g,'d').toLowerCase().replace(/[^a-z0-9]+/g,' ').trim();
@@ -193,6 +205,7 @@ async function load(){
     published=(window.__PLANTS&&window.__PLANTS.cay)||[];
     if(!published.length){$('#view').innerHTML='<div class="panel empty">Không tải được dữ liệu. Hãy giải nén toàn bộ thư mục (gồm cả thư mục data và images) rồi mở lại index.html.</div>';return}
   }
+  if(draft){draft=applyDraft(published);LS.set('dl_draft',draft)}
   PL=draft?draft:published;
   route();
 }
@@ -566,8 +579,8 @@ function saveDraft(list){
   draft=list; PL=list;
   if(!LS.set('dl_draft',list)){alertBox('Trình duyệt hết dung lượng lưu tạm. Hãy đăng lên web bớt rồi thêm tiếp.')}
 }
-function discardDraft(){if(!confirm('Hủy toàn bộ thay đổi chưa đăng?'))return;draft=null;LS.del('dl_draft');PL=published;route()}
-function delPlant(id){const p=byId(id);if(!confirm('Xóa "'+p.ten+'"?'))return;saveDraft(PL.filter(x=>x.id!==id));route()}
+function discardDraft(){if(!confirm('Hủy toàn bộ thay đổi chưa đăng?'))return;draft=null;LS.del('dl_draft');dirty={ids:[],del:[],all:false};LS.del('dl_dirty');PL=published;route()}
+function delPlant(id){const p=byId(id);if(!confirm('Xóa "'+p.ten+'"?'))return;markDirty(d=>{d.del.push(id);d.ids=d.ids.filter(x=>x!==id)});saveDraft(PL.filter(x=>x.id!==id));route()}
 let editImgs=[];
 function editPlant(id){
   const p=id?byId(id):{id:'',ten:'',khoaHoc:'',ho:'',boPhan:'',thanhPhan:'',congDung:'',dacDiem:'',anh:[],nhan:true};
@@ -595,12 +608,14 @@ function drawEditImgs(){$('#eImgs').innerHTML=editImgs.map((a,i)=>`<div class="i
 function resizeImg(file){return new Promise((res,rej)=>{const fr=new FileReader();fr.onload=()=>{const im=new Image();im.onload=()=>{
   const M=800,s=Math.min(1,M/Math.max(im.width,im.height)),cv=document.createElement('canvas');cv.width=Math.round(im.width*s);cv.height=Math.round(im.height*s);
   cv.getContext('2d').drawImage(im,0,0,cv.width,cv.height);res(cv.toDataURL('image/jpeg',0.72))};im.onerror=rej;im.src=fr.result};fr.onerror=rej;fr.readAsDataURL(file)})}
-async function addImgs(files){$('#imgMsg').textContent=' Đang xử lý ảnh...';for(const f of files){try{editImgs.push(await resizeImg(f))}catch(e){}}$('#imgMsg').textContent=' Ảnh sẽ được tự động thu nhỏ.';drawEditImgs()}
+async function addImgs(files){$('#imgMsg').textContent=' Đang xử lý ảnh...';const bad=[];for(const f of files){try{editImgs.push(await resizeImg(f))}catch(e){bad.push(f.name)}}
+  $('#imgMsg').textContent=bad.length?' Không đọc được '+bad.length+' ảnh ('+bad.join(', ')+'). Ảnh HEIC của iPhone cần đổi sang JPG trước.':' Ảnh sẽ được tự động thu nhỏ.';drawEditImgs()}
 function savePlant(id){
   const v=k=>$('#e_'+k).value.trim();
   if(!v('ten')){$('#eErr').textContent='Chưa nhập tên dược liệu.';return}
   const obj={id:id||('p'+Date.now().toString(36)),ten:v('ten'),khoaHoc:v('khoaHoc'),ho:v('ho'),boPhan:v('boPhan'),thanhPhan:v('thanhPhan'),congDung:v('congDung'),dacDiem:v('dacDiem'),anh:editImgs.slice(),nhan:$('#e_nhan').checked};
   const list=PL.slice(); const i=list.findIndex(x=>x.id===id); if(i>=0)list[i]=obj; else list.push(obj);
+  markDirty(d=>{if(!d.ids.includes(obj.id))d.ids.push(obj.id)});
   saveDraft(list); closeModal(); route();
 }
 function saveCfg(){const c={owner:$('#ghO').value.trim(),repo:$('#ghR').value.trim(),branch:$('#ghB').value.trim()||'main',token:$('#ghT').value.replace(/\s+/g,''),via:'token'};LS.set('dl_gh',c);$('#cfgMsg').textContent='Đã lưu.';}
@@ -669,7 +684,12 @@ async function putFile(path,b64,msg){
 async function publish(){
   const c=ghCfg(); const box=$('#pubMsg');
   if(!c.token||!c.owner||!c.repo){box.innerHTML='<div class="notice">Chưa đăng nhập quản lý. Nhập mật khẩu quản lý ở mục "Đăng nhập quản lý" bên dưới trước.</div>';return}
-  const list=JSON.parse(JSON.stringify(PL)); const todo=[];
+  // Lấy bản mới nhất trên GitHub rồi chỉ áp những cây đã sửa trên máy này
+  let remote;
+  try{const f=await gh('contents/data/plants.json?ref='+encodeURIComponent(c.branch));
+    remote=f?JSON.parse(new TextDecoder().decode(b64u8(f.content.replace(/\s/g,'')))).cay||[]:[]}
+  catch(e){box.innerHTML='<div class="notice">Không đọc được dữ liệu hiện tại trên GitHub: '+esc(e.message)+'</div>';return}
+  const list=JSON.parse(JSON.stringify(applyDraft(remote))); const todo=[];
   list.forEach(p=>(p.anh||[]).forEach((a,i)=>{if(a.startsWith('data:'))todo.push([p,i])}));
   try{
     let n=0;
@@ -683,7 +703,7 @@ async function publish(){
     const payload={capNhat:today,cay:list};
     await putFile('data/plants.json',b64utf8(JSON.stringify(payload,null,1)),'Cập nhật dữ liệu dược liệu ('+list.length+' cây)');
     await putFile('data/plants.js',b64utf8('window.__PLANTS='+JSON.stringify(payload)+';'),'Cập nhật bản dữ liệu nhúng');
-    published=list; PL=list; draft=null; LS.del('dl_draft');
+    published=list; PL=list; draft=null; LS.del('dl_draft'); dirty={ids:[],del:[],all:false}; LS.del('dl_dirty');
     vAdmin(); setMeta();
     $('#pubMsg').innerHTML='<div class="notice ok">Đã đăng thành công. Mọi người tải lại trang sau khoảng 1–2 phút sẽ thấy dữ liệu mới.</div>';
   }catch(e){box.innerHTML='<div class="notice">Đăng không thành công: '+esc(e.message)+'. Các thay đổi vẫn được giữ, bạn có thể thử lại.</div>'}
@@ -693,7 +713,7 @@ function exportJSON(){
   const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='duoc-lieu-sao-luu.json';a.click();
 }
 function importJSON(f){if(!f)return;const r=new FileReader();r.onload=()=>{try{const j=JSON.parse(r.result);const l=j.cay||j;if(!Array.isArray(l))throw 0;
-  if(confirm('Thay toàn bộ dữ liệu hiện tại bằng '+l.length+' dược liệu trong file? (Chọn Hủy để không làm gì)')){saveDraft(l);route()}}catch(e){alertBox('File không hợp lệ.')}};r.readAsText(f)}
+  if(confirm('Thay toàn bộ dữ liệu hiện tại bằng '+l.length+' dược liệu trong file? (Chọn Hủy để không làm gì)')){markDirty(d=>{d.all=true});saveDraft(l);route()}}catch(e){alertBox('File không hợp lệ.')}};r.readAsText(f)}
 
 load();
 </script>
