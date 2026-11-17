@@ -121,6 +121,7 @@ table.list img{width:44px;height:44px;object-fit:cover;border-radius:4px;border:
 .edit-imgs .it{position:relative}
 .edit-imgs img{width:96px;height:96px;object-fit:cover;border-radius:6px;border:1px solid var(--line)}
 .edit-imgs button{position:absolute;top:3px;right:3px;font-size:11px;padding:1px 6px;border-radius:4px;border:1px solid var(--line);background:#fff;cursor:pointer}
+.edit-imgs button.rot{top:auto;bottom:3px}
 .sec{margin-top:22px}
 .sec h3{font-size:15px;margin:0 0 10px;font-weight:650}
 footer{border-top:1px solid var(--line);padding:16px 0;color:var(--muted);font-size:13px}
@@ -622,10 +623,16 @@ function editPlant(id){
     <div class="row" style="margin-top:16px"><span class="hint" id="eErr"></span><span class="sp"></span><button class="btn" onclick="closeModal()">Hủy</button><button class="btn pri" onclick="savePlant('${id||''}')">Lưu</button></div>`);
   drawEditImgs();
 }
-function drawEditImgs(){$('#eImgs').innerHTML=editImgs.map((a,i)=>`<div class="it"><img src="${a}" alt=""><button onclick="editImgs.splice(${i},1);drawEditImgs()">Xóa</button></div>`).join('')}
+function drawEditImgs(){$('#eImgs').innerHTML=editImgs.map((a,i)=>`<div class="it"><img src="${a}" alt=""><button onclick="editImgs.splice(${i},1);drawEditImgs()">Xóa</button><button class="rot" onclick="rotImg(${i})" title="Xoay 90°">Xoay</button></div>`).join('')}
 function resizeImg(file){return new Promise((res,rej)=>{const fr=new FileReader();fr.onload=()=>{const im=new Image();im.onload=()=>{
   const M=800,s=Math.min(1,M/Math.max(im.width,im.height)),cv=document.createElement('canvas');cv.width=Math.round(im.width*s);cv.height=Math.round(im.height*s);
-  cv.getContext('2d').drawImage(im,0,0,cv.width,cv.height);res(cv.toDataURL('image/jpeg',0.72))};im.onerror=rej;im.src=fr.result};fr.onerror=rej;fr.readAsDataURL(file)})}
+  cv.getContext('2d').drawImage(im,0,0,cv.width,cv.height);
+  // Ảnh ngang thì tự xoay dọc (90° theo chiều kim đồng hồ); sai chiều thì bấm nút "Xoay" để chỉnh
+  if(cv.width>cv.height)res(rotateCanvas(cv).toDataURL('image/jpeg',0.72));else res(cv.toDataURL('image/jpeg',0.72))};im.onerror=rej;im.src=fr.result};fr.onerror=rej;fr.readAsDataURL(file)})}
+function rotateCanvas(src){const cv=document.createElement('canvas');cv.width=src.height;cv.height=src.width;
+  const g=cv.getContext('2d');g.translate(cv.width,0);g.rotate(Math.PI/2);g.drawImage(src,0,0);return cv}
+function rotImg(i){const im=new Image();im.onload=()=>{const c=document.createElement('canvas');c.width=im.naturalWidth;c.height=im.naturalHeight;
+  c.getContext('2d').drawImage(im,0,0);editImgs[i]=rotateCanvas(c).toDataURL('image/jpeg',0.85);drawEditImgs()};im.src=editImgs[i]}
 async function addImgs(files){$('#imgMsg').textContent=' Đang xử lý ảnh...';const bad=[];for(const f of files){try{editImgs.push(await resizeImg(f))}catch(e){bad.push(f.name)}}
   $('#imgMsg').textContent=bad.length?' Không đọc được '+bad.length+' ảnh ('+bad.join(', ')+'). Ảnh HEIC của iPhone cần đổi sang JPG trước.':' Ảnh sẽ được tự động thu nhỏ.';drawEditImgs()}
 function savePlant(id){
