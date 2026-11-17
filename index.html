@@ -170,13 +170,25 @@ let PL=[];            // dữ liệu đang dùng (có thể gồm bản nháp c�
 let draft=LS.get('dl_draft',null);
 // Ghi nhớ những cây đã sửa/xóa trên máy này, để khi đăng chỉ ghi đè đúng những cây đó
 // (tránh bản nháp cũ trên máy khác xóa mất ảnh/dữ liệu đã đăng từ máy khác)
-let dirty=LS.get('dl_dirty',null)||{ids:[],del:[],all:!!draft};
+const NODIRTY=()=>({ids:[],del:[],all:false,base:{}});
+let dirty=LS.get('dl_dirty',null);
 function markDirty(f){f(dirty);LS.set('dl_dirty',dirty)}
+const same=(a,b)=>JSON.stringify(a??null)===JSON.stringify(b??null);
+const blank=v=>v==null||v===''||(Array.isArray(v)&&!v.length);
+// Gộp 3 chiều theo từng mục: mục nào người dùng không sửa (so với bản gốc lúc bắt đầu sửa) thì lấy bản mới nhất trên web
+function merge3(b,l,r){
+  const o={};
+  for(const k of new Set([...Object.keys(r),...Object.keys(l)])){
+    if(b) o[k]=same(l[k],b[k])?r[k]:l[k];
+    else o[k]=blank(l[k])&&!blank(r[k])?r[k]:l[k];   // bản nháp cũ không rõ gốc: không để mục trống đè lên dữ liệu đã có
+  }
+  return o;
+}
 function applyDraft(remote){
   if(!draft)return remote;
   if(dirty.all)return draft;
   const loc=new Map(draft.map(p=>[p.id,p]));
-  const out=remote.filter(p=>!dirty.del.includes(p.id)).map(p=>dirty.ids.includes(p.id)&&loc.has(p.id)?loc.get(p.id):p);
+  const out=remote.filter(p=>!dirty.del.includes(p.id)).map(p=>dirty.ids.includes(p.id)&&loc.has(p.id)?merge3(dirty.base[p.id],loc.get(p.id),p):p);
   draft.forEach(p=>{if(dirty.ids.includes(p.id)&&!out.some(o=>o.id===p.id))out.push(p)});
   return out;
 }
@@ -205,6 +217,12 @@ async function load(){
     published=(window.__PLANTS&&window.__PLANTS.cay)||[];
     if(!published.length){$('#view').innerHTML='<div class="panel empty">Không tải được dữ liệu. Hãy giải nén toàn bộ thư mục (gồm cả thư mục data và images) rồi mở lại index.html.</div>';return}
   }
+  if(draft&&(!dirty||!dirty.base)){
+    // Bản nháp tạo từ phiên bản trang cũ: chỉ coi là "đã sửa" những cây khác với web, và không xóa cây nào
+    dirty=NODIRTY(); dirty.ids=draft.filter(p=>{const q=published.find(o=>o.id===p.id);return !q||!same(q,p)}).map(p=>p.id);
+    LS.set('dl_dirty',dirty);
+  }
+  if(!dirty)dirty=NODIRTY();
   if(draft){draft=applyDraft(published);LS.set('dl_draft',draft)}
   PL=draft?draft:published;
   route();
@@ -579,7 +597,7 @@ function saveDraft(list){
   draft=list; PL=list;
   if(!LS.set('dl_draft',list)){alertBox('Trình duyệt hết dung lượng lưu tạm. Hãy đăng lên web bớt rồi thêm tiếp.')}
 }
-function discardDraft(){if(!confirm('Hủy toàn bộ thay đổi chưa đăng?'))return;draft=null;LS.del('dl_draft');dirty={ids:[],del:[],all:false};LS.del('dl_dirty');PL=published;route()}
+function discardDraft(){if(!confirm('Hủy toàn bộ thay đổi chưa đăng?'))return;draft=null;LS.del('dl_draft');dirty=NODIRTY();LS.del('dl_dirty');PL=published;route()}
 function delPlant(id){const p=byId(id);if(!confirm('Xóa "'+p.ten+'"?'))return;markDirty(d=>{d.del.push(id);d.ids=d.ids.filter(x=>x!==id)});saveDraft(PL.filter(x=>x.id!==id));route()}
 let editImgs=[];
 function editPlant(id){
@@ -615,7 +633,8 @@ function savePlant(id){
   if(!v('ten')){$('#eErr').textContent='Chưa nhập tên dược liệu.';return}
   const obj={id:id||('p'+Date.now().toString(36)),ten:v('ten'),khoaHoc:v('khoaHoc'),ho:v('ho'),boPhan:v('boPhan'),thanhPhan:v('thanhPhan'),congDung:v('congDung'),dacDiem:v('dacDiem'),anh:editImgs.slice(),nhan:$('#e_nhan').checked};
   const list=PL.slice(); const i=list.findIndex(x=>x.id===id); if(i>=0)list[i]=obj; else list.push(obj);
-  markDirty(d=>{if(!d.ids.includes(obj.id))d.ids.push(obj.id)});
+  const orig=id?byId(id):null;
+  markDirty(d=>{if(!d.ids.includes(obj.id)){d.ids.push(obj.id);if(orig)d.base[obj.id]=JSON.parse(JSON.stringify(orig))}});
   saveDraft(list); closeModal(); route();
 }
 function saveCfg(){const c={owner:$('#ghO').value.trim(),repo:$('#ghR').value.trim(),branch:$('#ghB').value.trim()||'main',token:$('#ghT').value.replace(/\s+/g,''),via:'token'};LS.set('dl_gh',c);$('#cfgMsg').textContent='Đã lưu.';}
@@ -703,7 +722,7 @@ async function publish(){
     const payload={capNhat:today,cay:list};
     await putFile('data/plants.json',b64utf8(JSON.stringify(payload,null,1)),'Cập nhật dữ liệu dược liệu ('+list.length+' cây)');
     await putFile('data/plants.js',b64utf8('window.__PLANTS='+JSON.stringify(payload)+';'),'Cập nhật bản dữ liệu nhúng');
-    published=list; PL=list; draft=null; LS.del('dl_draft'); dirty={ids:[],del:[],all:false}; LS.del('dl_dirty');
+    published=list; PL=list; draft=null; LS.del('dl_draft'); dirty=NODIRTY(); LS.del('dl_dirty');
     vAdmin(); setMeta();
     $('#pubMsg').innerHTML='<div class="notice ok">Đã đăng thành công. Mọi người tải lại trang sau khoảng 1–2 phút sẽ thấy dữ liệu mới.</div>';
   }catch(e){box.innerHTML='<div class="notice">Đăng không thành công: '+esc(e.message)+'. Các thay đổi vẫn được giữ, bạn có thể thử lại.</div>'}
