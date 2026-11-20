@@ -596,7 +596,7 @@ function vAdmin(){
 }
 function saveDraft(list){
   draft=list; PL=list;
-  if(!LS.set('dl_draft',list)){alertBox('Trình duyệt hết dung lượng lưu tạm. Hãy đăng lên web bớt rồi thêm tiếp.')}
+  if(!LS.set('dl_draft',list)){alertBox('Trình duyệt hết dung lượng lưu tạm, ảnh vừa thêm có thể mất nếu tải lại trang. Hãy bấm "Đăng lên web" ngay rồi thêm tiếp.')}
 }
 function discardDraft(){if(!confirm('Hủy toàn bộ thay đổi chưa đăng?'))return;draft=null;LS.del('dl_draft');dirty=NODIRTY();LS.del('dl_dirty');PL=published;route()}
 function delPlant(id){const p=byId(id);if(!confirm('Xóa "'+p.ten+'"?'))return;markDirty(d=>{d.del.push(id);d.ids=d.ids.filter(x=>x!==id)});saveDraft(PL.filter(x=>x.id!==id));route()}
@@ -635,10 +635,24 @@ function rotImg(i){const im=new Image();im.onload=()=>{const c=document.createEl
   c.getContext('2d').drawImage(im,0,0);editImgs[i]=rotateCanvas(c).toDataURL('image/jpeg',0.85);drawEditImgs()};im.src=editImgs[i]}
 async function addImgs(files){$('#imgMsg').textContent=' Đang xử lý ảnh...';const bad=[];for(const f of files){try{editImgs.push(await resizeImg(f))}catch(e){bad.push(f.name)}}
   $('#imgMsg').textContent=bad.length?' Không đọc được '+bad.length+' ảnh ('+bad.join(', ')+'). Ảnh HEIC của iPhone cần đổi sang JPG trước.':' Ảnh sẽ được tự động thu nhỏ.';drawEditImgs()}
-function savePlant(id){
+let saving=false;
+async function savePlant(id){
+  if(saving)return;
   const v=k=>$('#e_'+k).value.trim();
   if(!v('ten')){$('#eErr').textContent='Chưa nhập tên dược liệu.';return}
   const obj={id:id||('p'+Date.now().toString(36)),ten:v('ten'),khoaHoc:v('khoaHoc'),ho:v('ho'),boPhan:v('boPhan'),thanhPhan:v('thanhPhan'),congDung:v('congDung'),dacDiem:v('dacDiem'),anh:editImgs.slice(),nhan:$('#e_nhan').checked};
+  // Đã đăng nhập: tải ảnh mới lên GitHub ngay khi bấm Lưu, bản nháp chỉ giữ đường dẫn ảnh.
+  // (Không giữ ảnh trong bộ nhớ tạm của trình duyệt vì rất dễ đầy, nhất là trên điện thoại, làm mất ảnh.)
+  const c=ghCfg(), todo=obj.anh.map((a,i)=>a.startsWith('data:')?i:-1).filter(i=>i>=0);
+  if(c.token&&todo.length){
+    saving=true; const btn=document.querySelector('#modal .btn.pri'); if(btn)btn.disabled=true;
+    try{let n=0;
+      for(const i of todo){n++; $('#eErr').textContent=`Đang tải ảnh lên (${n}/${todo.length})...`;
+        const path=`images/${obj.id}-${Date.now().toString(36)}-${i+1}.jpg`;
+        await putFile(path,obj.anh[i].split(',')[1],'Thêm ảnh '+obj.ten); obj.anh[i]=path; editImgs[i]=path;}
+    }catch(e){$('#eErr').textContent='Tải ảnh lên không được: '+e.message+'. Bấm Lưu để thử lại.';return}
+    finally{saving=false; if(btn)btn.disabled=false}
+  }
   const list=PL.slice(); const i=list.findIndex(x=>x.id===id); if(i>=0)list[i]=obj; else list.push(obj);
   const orig=id?byId(id):null;
   markDirty(d=>{if(!d.ids.includes(obj.id)){d.ids.push(obj.id);if(orig)d.base[obj.id]=JSON.parse(JSON.stringify(orig))}});
