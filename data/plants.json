@@ -1,5 +1,5 @@
 {
- "capNhat": "2026-11-20",
+ "capNhat": "2026-11-25",
  "cay": [
   {
    "id": "p01",
@@ -446,7 +446,10 @@
    "thanhPhan": "Flavonoid, Coumarin",
    "congDung": "Chữa rôm sẩy, mụn nhọt, lở loét, các bệnh viêm nhiễm như viêm tuyến sữa, viêm mũi họng",
    "dacDiem": "Thân ngắn kh đều, lông cứng\nLá mọc đối, kh cuống\nPhiến lá bầu dục thon, hai đầu nhọn\nHai mặt có lông nhám, mặt trên lục xám đốm trắngm mặt dưới nhạt\nMùi hơi thơm, vị hơi mặn",
-   "anh": [],
+   "anh": [
+    "images/pmwkjzt55-mww8i74z-1.jpg",
+    "images/pmwkjzt55-mww8i9rz-2.jpg"
+   ],
    "nhan": true
   },
   {
@@ -727,7 +730,10 @@
    "thanhPhan": "Anthranoid, Tanin",
    "congDung": "Làm thuốc kích thích tiêu hóa, nhuận tràng, tẩy sổ",
    "dacDiem": "Thân rễ hình trụ, nón, dạng cầu hay méo mó\nMặt ngoài nâu vàng- nâu đỏ, có đám đen nhạt\nMụi đặc trưng, vị đắng chát",
-   "anh": [],
+   "anh": [
+    "images/pmwkxsqor-mww8ip4v-1.jpg",
+    "images/pmwkxsqor-mww8irir-2.jpg"
+   ],
    "nhan": true
   },
   {
@@ -855,6 +861,21 @@
    "dacDiem": "Lá nhăn nheo, nhàu nát, như cái thìa\nPhiến lá dày, nhẵn\nMặt trên lá lục sẫm, dưới lục nhạt",
    "anh": [
     "images/pmwkxz4h4-mwojblkj-1.jpg"
+   ],
+   "nhan": true
+  },
+  {
+   "id": "pmww8mk8m",
+   "ten": "Rau má",
+   "khoaHoc": "Centella asiatica",
+   "ho": "Apiaceae - Cần",
+   "boPhan": "Toàn thân tươi/khô",
+   "thanhPhan": "Saponin",
+   "congDung": "Chữa sốt, máu cam vàng da",
+   "dacDiem": "dễ",
+   "anh": [
+    "images/pmww8mk8m-mww8mk8r-1.jpg",
+    "images/pmww8mk8m-mww8mmp0-2.jpg"
    ],
    "nhan": true
   }
